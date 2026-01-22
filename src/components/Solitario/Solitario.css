@@ -1,0 +1,504 @@
+.solitario-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at center, #0a6b0a 0%, #005500 100%);
+  padding: 16px;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  overflow: hidden;
+}
+
+.solitario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+}
+
+.solitario-stats {
+  display: flex;
+  gap: 24px;
+  font-weight: bold;
+}
+
+.solitario-reset {
+  padding: 4px 12px;
+  background-color: #c0c0c0;
+  border: 2px outset #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.solitario-reset:hover {
+  background-color: #dfdfdf;
+}
+
+.solitario-reset:active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+}
+
+.solitario-board {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow-y: auto;
+}
+
+/* TOP SECTION - Stock, Waste y Foundations en línea horizontal */
+.solitario-top {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0 8px;
+}
+
+.solitario-pile {
+  position: relative;
+  width: 90px;
+  height: 130px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.solitario-pile:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.pile-count {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* WASTE - Área para las 3 cartas apiladas horizontalmente */
+.solitario-waste {
+  position: relative;
+  width: 150px;
+  height: 130px;
+  flex-shrink: 0;
+}
+
+.card-in-waste {
+  position: absolute !important;
+  top: 0 !important;
+  transition: left 0.2s ease;
+}
+
+/* Hover solo en la última carta del waste */
+.card-in-waste[draggable="true"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  z-index: 10 !important;
+}
+
+.solitario-foundations {
+  display: flex;
+  gap: 12px;
+  margin-left: auto;
+}
+
+/* TABLEAUS - 7 columnas */
+.solitario-tableaus {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  flex: 1;
+  padding: 0 8px;
+  min-height: 500px;
+}
+
+.solitario-tableau {
+  position: relative;
+  min-height: 400px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  transition: all 0.2s;
+  height: fit-content;
+}
+
+.solitario-tableau:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* CARTAS BASE */
+.card {
+  width: 90px;
+  height: 130px;
+  background-color: white;
+  border: 3px solid;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+/* Cartas en pilas (Stock, Foundations) - position: relative */
+.card-in-pile {
+  position: relative;
+  left: 0 !important;
+  top: 0 !important;
+  transform: none !important;
+}
+
+/* Cartas en tableaus - position: absolute para apilar */
+.card-in-tableau {
+  position: absolute !important;
+  left: 0 !important;
+  transform: none !important;
+  margin: 0 auto;
+  right: 0;
+}
+
+/* Solo la última carta interactiva tiene hover */
+.card-in-tableau:not(.card-blocked):hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  z-index: 100 !important;
+}
+
+.card-in-tableau.selected {
+  box-shadow: 0 0 0 3px #FFD700;
+  transform: translateY(-6px) !important;
+  z-index: 200 !important;
+}
+
+/* Cartas bloqueadas (no interactivas) */
+.card-blocked {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* DORSO DE LA CARTA */
+.card-back {
+  background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 50%, #1a3a52 100%);
+  border-color: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.03) 10px,
+    rgba(255, 255, 255, 0.03) 20px
+  );
+}
+
+.card-back-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  z-index: 1;
+}
+
+/* FRENTE DE LA CARTA - Estilo limpio con logo */
+.card-face {
+  background: white;
+  position: relative;
+  padding: 8px;
+}
+
+.card-corner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  line-height: 1;
+}
+
+.card-corner-top {
+  top: 6px;
+  left: 8px;
+}
+
+.card-corner-bottom {
+  bottom: 6px;
+  right: 8px;
+  transform: rotate(180deg);
+}
+
+.card-corner-rank {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1;
+  font-family: Arial, sans-serif;
+  color: #000;
+}
+
+.card-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+}
+
+/* Logo en el centro de la carta */
+.card-logo {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  max-width: 65px;
+  max-height: 65px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* CARTA VACÍA */
+.card-empty {
+  background-color: transparent;
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 32px;
+  cursor: default;
+  box-shadow: none;
+}
+
+.card-empty:hover {
+  transform: none !important;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.card-empty.card-in-pile:hover {
+  transform: none;
+}
+
+.card-empty.card-in-tableau:hover {
+  transform: none !important;
+}
+
+/* Colores específicos para cada lenguaje */
+.card-face[data-language="Java"] {
+  border-color: #FF6B35;
+}
+
+.card-face[data-language="Python"] {
+  border-color: #3776AB;
+}
+
+.card-face[data-language="JavaScript"] {
+  border-color: #F7DF1E;
+}
+
+.card-face[data-language="C++"] {
+  border-color: #00599C;
+}
+
+/* Logo placeholder en foundations vacías */
+.foundation-placeholder-logo {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.5;
+  filter: grayscale(100%) brightness(1.2);
+  max-width: 55px;
+  max-height: 55px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Evitar selección de texto al arrastrar */
+.card[draggable="true"] {
+  cursor: grab;
+}
+
+.card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+/* Cartas no arrastrables no tienen cursor de agarre */
+.card[draggable="false"] {
+  cursor: default;
+}
+
+/* Todas las imágenes no arrastrables */
+img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Placeholders no interactivos */
+.card-empty {
+  pointer-events: none;
+}
+
+.card-empty.card-in-pile {
+  pointer-events: auto;
+}
+
+/* ========================================
+   MODALES DE VICTORIA Y DERROTA
+   ======================================== */
+
+.victory-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.victory-modal {
+  background-color: #c0c0c0;
+  border: 3px solid;
+  border-color: #dfdfdf #000 #000 #dfdfdf;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  min-width: 400px;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.victory-title-bar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gameover-title-bar {
+  background: linear-gradient(to right, #8B0000, #DC143C);
+}
+
+.victory-content {
+  padding: 24px;
+  text-align: center;
+}
+
+.victory-content h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #000080;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.gameover-modal .victory-content h2 {
+  color: #8B0000;
+}
+
+.gameover-message {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.victory-stats {
+  background-color: white;
+  border: 2px inset #808080;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.victory-stats p {
+  margin: 8px 0;
+  font-size: 14px;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+}
+
+.victory-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.win95-button {
+  padding: 6px 20px;
+  background-color: #c0c0c0;
+  border: 2px outset #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  min-width: 100px;
+}
+
+.win95-button:hover {
+  background-color: #dfdfdf;
+}
+
+.win95-button:active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+}

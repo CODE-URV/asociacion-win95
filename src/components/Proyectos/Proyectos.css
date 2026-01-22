@@ -1,0 +1,350 @@
+.proyectos-win95 {
+  background: #c0c0c0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+}
+
+.proyectos-header {
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* Pestañas */
+.proyectos-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 4px 4px 0 4px;
+  background: #c0c0c0;
+}
+
+.tab-btn {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  padding: 4px 16px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.tab-btn.active {
+  background: #fff;
+  font-weight: bold;
+  border-bottom-color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+/* Layout de 2 columnas */
+.proyectos-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 4px;
+  gap: 4px;
+}
+
+/* Columna izquierda: Lista */
+.proyectos-sidebar {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  transition: width 0.3s ease;
+}
+
+/* Sidebar ocupa todo el ancho cuando no hay selección */
+.proyectos-sidebar.full-width {
+  width: 100%;
+}
+
+.proyectos-list-header {
+  background: #c0c0c0;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-bottom: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+.proyectos-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.proyecto-item {
+  background: #f0f0f0;
+  border: 1px solid #808080;
+  padding: 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.proyecto-item:hover {
+  background: #e8e8e8;
+}
+
+.proyecto-item.selected {
+  background: #000080;
+  color: white;
+  border-color: #000080;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.item-icon {
+  font-size: 16px;
+}
+
+.proyecto-item.selected .item-icon {
+  filter: brightness(2);
+}
+
+.item-name {
+  font-weight: bold;
+  font-size: 12px;
+  flex: 1;
+}
+
+.item-lead {
+  font-size: 10px;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.item-progress-container {
+  position: relative;
+  height: 14px;
+  background: #fff;
+  border: 1px solid #808080;
+}
+
+.item-progress-bar {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.item-progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9px;
+  line-height: 14px;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 0 0 2px #fff;
+}
+
+/* Columna derecha: Detalles */
+.proyectos-details {
+  flex: 1;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideInRight 0.2s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.details-header {
+  background: linear-gradient(180deg, #f0f0f0 0%, #d8d8d8 100%);
+  padding: 12px;
+  border-bottom: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.details-icon {
+  font-size: 24px;
+}
+
+.details-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #000080;
+  flex: 1;
+}
+
+/* Botón de cerrar detalles */
+.close-details-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: #666;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.close-details-btn:hover {
+  background: #e0e0e0;
+  color: #000;
+}
+
+.close-details-btn:active {
+  background: #d0d0d0;
+}
+
+.details-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.detail-section {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 11px;
+  color: #000080;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.section-content {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.detail-progress-container {
+  height: 20px;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  position: relative;
+}
+
+.detail-progress-bar {
+  height: 100%;
+  transition: width 0.5s ease-out;
+}
+
+.tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tech-badge {
+  background: #000080;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  border: 1px solid #000;
+  font-weight: 500;
+}
+
+.repo-btn {
+  background: linear-gradient(180deg, #f0f0f0 0%, #d8d8d8 100%);
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.repo-btn:hover {
+  background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
+}
+
+.repo-btn:active {
+  border-color: #808080 #fff #fff #808080;
+  background: linear-gradient(180deg, #d0d0d0 0%, #e0e0e0 100%);
+}
+
+.details-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.proyectos-loading,
+.proyectos-error {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.proyectos-error {
+  color: #c00;
+  background: #fff;
+  border: 2px inset #dfdfdf;
+  margin: 8px;
+}
+
+/* Scrollbar Win95 */
+.proyectos-list::-webkit-scrollbar,
+.details-content::-webkit-scrollbar {
+  width: 16px;
+}
+
+.proyectos-list::-webkit-scrollbar-track,
+.details-content::-webkit-scrollbar-track {
+  background: #c0c0c0;
+}
+
+.proyectos-list::-webkit-scrollbar-thumb,
+.details-content::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+}

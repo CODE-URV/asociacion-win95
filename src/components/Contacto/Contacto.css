@@ -1,0 +1,144 @@
+.contacto-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+.contacto-container {
+  max-width: 500px;
+  width: 100%;
+  color: #000;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+}
+
+.contacto-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: #fff;
+  padding: 20px;
+  border: 2px inset #dfdfdf;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 0 #000;
+}
+
+.contacto-avatar {
+  flex-shrink: 0;
+}
+
+.contacto-avatar img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.contacto-info-main h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  color: #000080;
+}
+
+.contacto-info-main p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #000;
+}
+
+.contacto-section-title {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 10px;
+  padding: 5px 8px;
+  background: #000080;
+  color: white;
+  border: 1px solid #000;
+}
+
+.redes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.red-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  transition: all 0.1s;
+}
+
+.red-card:hover {
+  background: #d4d4d4;
+}
+
+.red-card:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  padding: 13px 11px 11px 13px;
+}
+
+.red-icon {
+  font-size: 28px;
+}
+
+.red-name {
+  font-size: 13px;
+}
+
+.contacto-footer {
+  background: #fff;
+  padding: 15px;
+  border: 2px inset #dfdfdf;
+  box-shadow: 1px 1px 0 #000;
+}
+
+.contacto-field {
+  margin-bottom: 15px;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.contacto-actions {
+  text-align: center;
+}
+
+.win95-button {
+  padding: 8px 20px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  cursor: pointer;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.win95-button:hover {
+  background: #d4d4d4;
+}
+
+.win95-button:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  padding: 9px 19px 7px 21px;
+}x

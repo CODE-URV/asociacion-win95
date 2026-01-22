@@ -1,0 +1,153 @@
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background-color: #c0c0c0;
+  border-top: 2px solid #dfdfdf;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-left: 2px solid #dfdfdf;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  gap: 4px;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+  z-index: 1000;
+  pointer-events: auto;
+  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #000000;
+}
+
+/* Botón Start */
+.start-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  background-color: #c0c0c0;
+  border: 2px outset #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000;
+  transition: all 0.1s;
+  min-width: 70px;
+}
+
+.start-button:hover {
+  background-color: #dfdfdf;
+}
+
+.start-button:active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+}
+
+.start-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Separador */
+.taskbar-separator {
+  width: 2px;
+  height: 32px;
+  background: linear-gradient(90deg, #dfdfdf 0%, #808080 100%);
+  margin: 0 2px;
+}
+
+/* Área de ventanas abiertas */
+.taskbar-windows {
+  flex: 1;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 0 4px;
+}
+
+/* Reloj */
+.taskbar-clock {
+  padding: 2px 6px;
+  background-color: #c0c0c0;
+  border: 2px inset #808080;
+  font-size: 12px;
+  font-weight: bold;
+  color: #000;
+  min-width: 50px;
+  text-align: center;
+  margin-left: 4px;
+}
+
+/* Botones de ventanas en la taskbar */
+.taskbar-window-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background-color: #c0c0c0;
+  border: 2px outset #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  font-size: 12px;
+  color: #000;
+  transition: all 0.1s;
+  min-width: 120px;
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.taskbar-window-btn:hover {
+  background-color: #dfdfdf;
+}
+
+.taskbar-window-btn:active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+}
+
+/* Ventana activa (no minimizada) */
+.taskbar-window-btn.active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+  background-color: #dfdfdf;
+}
+
+.taskbar-window-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.taskbar-window-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* Botón Start activo (cuando el menú está abierto) */
+.start-button.active {
+  border-style: inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
+  background-color: #dfdfdf;
+}
