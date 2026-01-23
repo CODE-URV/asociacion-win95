@@ -12,12 +12,12 @@ import gameIcon from '../../assets/desktop_icons/game.png';
 
 function Desktop({ onOpenWindow, windows, onRestoreWindow, onFocusWindow, onMinimizeWindow }) {
   const desktopIcons = [
-    { name: 'Qui som?', icon: '💻', iconImage: aboutUsIcon, id: 'about' },
-    { name: 'Events', icon: '📅', iconImage: eventsIcon, id: 'events' },
-    { name: 'Projectes', icon: '🚀',iconImage: projectsIcon,  id: 'projects' },
-    { name: 'Fes-te SOCI', icon: '📝', iconImage: sociosIcon, id: 'inscriptions' },
-    { name: 'Contacte', icon: '📧', iconImage: contactIcon, id: 'contact' },
-    { name: 'Solitari', icon: '🃏',iconImage: gameIcon, id: 'solitario' },
+    { name: 'Quien somos', icon: '💻', iconImage: aboutUsIcon, id: 'about' },
+    { name: 'Eventos', icon: '📅', iconImage: eventsIcon, id: 'events' },
+    { name: 'Proyectos', icon: '🚀',iconImage: projectsIcon,  id: 'projects' },
+    { name: 'Hazte socio', icon: '📝', iconImage: sociosIcon, id: 'inscriptions' },
+    { name: 'Contacto', icon: '📧', iconImage: contactIcon, id: 'contact' },
+    { name: 'Solitario', icon: '🃏',iconImage: gameIcon, id: 'solitario' },
   ];
 
   return (

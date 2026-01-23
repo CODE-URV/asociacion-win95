@@ -2,15 +2,29 @@ import React from 'react';
 import './StartMenu.css';
 import logoURV from '../../assets/code_urv_logo_nobg.png';
 
+// Importamos los iconos
+import aboutUsIcon from '../../assets/desktop_icons/about_us.png';
+import eventsIcon from '../../assets/desktop_icons/events.png';
+import projectsIcon from '../../assets/desktop_icons/projects.png';
+import sociosIcon from '../../assets/desktop_icons/socios.png';
+import contactIcon from '../../assets/desktop_icons/contact.png';
+import gameIcon from '../../assets/desktop_icons/game.png';
+
 function StartMenu({ isOpen, onClose, onOpenWindow }) {
   if (!isOpen) return null;
 
-  const menuItems = [
-    { name: 'Sobre Nosotros', icon: '💻', id: 'about' },
-    { name: 'Eventos', icon: '📅', id: 'events' },
-    { name: 'Proyectos', icon: '🚀', id: 'projects' },
-    { name: 'Inscripciones', icon: '📝', id: 'inscriptions' },
-    { name: 'Contacto', icon: '📧', id: 'contact' },
+  // Apps principales
+  const mainItems = [
+    { name: 'Quien Somos', icon: '💻', iconImage: aboutUsIcon, id: 'about' },
+    { name: 'Eventos', icon: '📅', iconImage: eventsIcon, id: 'events' },
+    { name: 'Proyectos', icon: '🚀', iconImage: projectsIcon, id: 'projects' },
+    { name: 'Hazte socio', icon: '📝', iconImage: sociosIcon, id: 'inscriptions' },
+    { name: 'Contacto', icon: '📧', iconImage: contactIcon, id: 'contact' },
+  ];
+
+  // Sección de Juegos
+  const gameItems = [
+    { name: 'Solitario', icon: '🃏', iconImage: gameIcon, id: 'solitario' },
   ];
 
   const handleItemClick = (item) => {
@@ -25,36 +39,44 @@ function StartMenu({ isOpen, onClose, onOpenWindow }) {
 
   return (
     <>
-      {/* Overlay para cerrar al hacer clic fuera */}
       <div className="start-menu-overlay" onClick={onClose}></div>
       
       <div className="start-menu">
-        {/* Banda lateral con logo */}
         <div className="start-menu-sidebar">
           <img src={logoURV} alt="CODE URV" className="start-menu-logo" />
           <span className="start-menu-title">CODE URV</span>
         </div>
 
-        {/* Contenido del menú */}
         <div className="start-menu-content">
-          {/* Sección principal */}
+          {/* SECCIÓN 1: APPS PRINCIPALES */}
           <div className="start-menu-section">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                className="start-menu-item"
-                onClick={() => handleItemClick(item)}
-              >
-                <span className="start-menu-item-icon">{item.icon}</span>
+            {mainItems.map((item) => (
+              <button key={item.id} className="start-menu-item" onClick={() => handleItemClick(item)}>
+                <span className="start-menu-item-icon">
+                  {item.iconImage ? <img src={item.iconImage} alt="" className="start-menu-mini-icon" /> : item.icon}
+                </span>
                 <span className="start-menu-item-text">{item.name}</span>
               </button>
             ))}
           </div>
 
-          {/* Separador */}
           <div className="start-menu-separator"></div>
 
-          {/* Sección inferior */}
+          {/* SECCIÓN 2: JUEGOS / ENTRETENIMIENTO */}
+          <div className="start-menu-section">
+            {gameItems.map((item) => (
+              <button key={item.id} className="start-menu-item" onClick={() => handleItemClick(item)}>
+                <span className="start-menu-item-icon">
+                  {item.iconImage ? <img src={item.iconImage} alt="" className="start-menu-mini-icon" /> : item.icon}
+                </span>
+                <span className="start-menu-item-text">{item.name}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="start-menu-separator"></div>
+
+          {/* SECCIÓN 3: CONFIG / ACERCA DE */}
           <div className="start-menu-section">
             <button className="start-menu-item" onClick={handleConfigClick}>
               <span className="start-menu-item-icon">⚙️</span>

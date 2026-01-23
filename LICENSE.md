@@ -1,7 +1,5 @@
 # Licencia Propietaria — Uso exclusivo para CODE URV
 
-**IMPORTANTE**: Este texto es una plantilla. No es asesoramiento legal. Si necesitáis que sea "blindado" a nivel jurídico (por ejemplo, "licencia exclusiva" formal, cesión parcial, ámbito territorial, duración, etc.), lo ideal es revisarlo con alguien con conocimientos legales.
-
 ## 1. Partes
 
 - **Autor / Titular**: Gaizka Alonso Martínez ([@Huntterstrike](https://github.com/Huntterstrike)), en adelante "EL AUTOR".

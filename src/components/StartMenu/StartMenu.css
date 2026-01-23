@@ -107,3 +107,20 @@
   border-top: 1px solid #808080;
   border-bottom: 1px solid #dfdfdf;
 }
+
+.start-menu-mini-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Ajustamos el contenedor del icono para que no haya saltos de línea */
+.start-menu-item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

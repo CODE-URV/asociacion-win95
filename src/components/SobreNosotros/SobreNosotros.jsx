@@ -11,6 +11,7 @@ function SobreNosotros() {
     const [galeria, setGaleria] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [preloadedImages, setPreloadedImages] = useState({});
 
     useEffect(() => {
         fetchGallery();
@@ -47,9 +48,12 @@ function SobreNosotros() {
                 if (!imagesRes.ok) continue;
                 const imagesData = await imagesRes.json();
 
-                const images = (imagesData.files || []).map(file =>
-                    `https://lh3.googleusercontent.com/d/${file.id}?alt=media`
-                );
+                // ✅ Guardamos ambas URLs: una para Chrome y otra de respaldo para Firefox
+                const images = (imagesData.files || []).map(file => ({
+                    id: file.id,
+                    primary: `https://drive.google.com/uc?export=view&id=${file.id}`,
+                    fallback: `https://lh3.googleusercontent.com/d/${file.id}=w2000`
+                }));
 
                 if (images.length > 0) {
                     galeriaData[folder.name] = images;
@@ -63,6 +67,42 @@ function SobreNosotros() {
             setError(err.message || "No se pudo cargar la galería");
             setLoading(false);
         }
+    };
+
+    // ✅ Función para precargar imágenes de una carpeta
+    const preloadFolderImages = (folderName) => {
+        if (preloadedImages[folderName]) return; // Ya precargadas
+
+        const images = galeria[folderName];
+        if (!images) return;
+
+        const loadedImages = [];
+        
+        images.forEach((imgData) => {
+            const img = new Image();
+            
+            // Intenta cargar la URL principal
+            img.src = imgData.primary;
+            
+            // Si falla, intenta con fallback
+            img.onerror = () => {
+                img.src = imgData.fallback;
+            };
+            
+            loadedImages.push(img);
+        });
+
+        setPreloadedImages(prev => ({
+            ...prev,
+            [folderName]: loadedImages
+        }));
+    };
+
+    // ✅ Precargar cuando se abre una carpeta
+    const handleOpenFolder = (folderName) => {
+        setSelectedFolder(folderName);
+        setCurrentImgIndex(0);
+        preloadFolderImages(folderName);
     };
 
     const valores = [
@@ -183,10 +223,7 @@ function SobreNosotros() {
                             <div
                                 key={folderName}
                                 className="galeria-item folder-item"
-                                onClick={() => {
-                                    setSelectedFolder(folderName);
-                                    setCurrentImgIndex(0);
-                                }}
+                                onClick={() => handleOpenFolder(folderName)}
                             >
                                 <div className="folder-icon">📁</div>
                                 <div className="folder-name">{folderName}</div>
@@ -210,9 +247,16 @@ function SobreNosotros() {
 
                         <div className="slider-container">
                             <img
-                                src={galeria[selectedFolder][currentImgIndex]}
+                                src={galeria[selectedFolder][currentImgIndex].primary}
+                                onError={(e) => {
+                                    // Si falla la URL principal, intenta con la de respaldo
+                                    if (e.target.src !== galeria[selectedFolder][currentImgIndex].fallback) {
+                                        e.target.src = galeria[selectedFolder][currentImgIndex].fallback;
+                                    }
+                                }}
                                 alt={`${selectedFolder} ${currentImgIndex + 1}`}
                                 className="modal-image"
+                                crossOrigin="anonymous"
                             />
                         </div>
 
