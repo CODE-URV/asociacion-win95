@@ -502,3 +502,31 @@ img {
   border-right-color: #dfdfdf;
   border-bottom-color: #dfdfdf;
 }
+
+/* ========================================
+   DRAG & DROP - Preview de múltiples cartas
+   ======================================== */
+
+.card-drag-preview {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Efecto visual cuando se está arrastrando */
+.card-in-tableau[draggable="true"]:active {
+  opacity: 0.5;
+  cursor: grabbing !important;
+}
+
+/* Feedback visual en el área de drop */
+.solitario-tableau.drag-over {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  border-style: solid;
+}
+
+.solitario-pile.drag-over {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  border-style: solid;
+}
