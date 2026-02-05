@@ -22,6 +22,7 @@ function Eventos() {
   const fetchMonthEvents = async () => {
     setLoading(true);
     setError(null);
+    
     try {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
@@ -29,18 +30,24 @@ function Eventos() {
       const startOfMonth = new Date(year, month, 1).toISOString();
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
 
+      // Llamamos a nuestra función serverless en Vercel que hace de proxy
       const url = `/api/get-calendar?timeMin=${encodeURIComponent(startOfMonth)}&timeMax=${encodeURIComponent(endOfMonth)}`;
 
       const response = await fetch(url);
+      // Si la función devuelve JSON con error, intentar leerlo
+      const data = await response.json().catch(() => null);
+
       if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err?.error || `Error ${response.status}`);
+        // Mostrar mensaje proveniente del proxy si existe
+        throw new Error(data?.error || data?.message || `Error ${response.status}`);
       }
-      const data = await response.json();
+
+      const items = data?.items || [];
 
       const map = {};
-      (data.items || []).forEach(ev => {
-        const dateStr = (ev.start.dateTime || ev.start.date).split('T')[0];
+      items.forEach(ev => {
+        const dateStr = (ev.start?.dateTime || ev.start?.date || '').split('T')[0];
+        if (!dateStr) return;
         if (!map[dateStr]) map[dateStr] = [];
         map[dateStr].push(ev);
       });
@@ -54,7 +61,6 @@ function Eventos() {
     }
   };
 
-  // --- resto de la UI (sin cambios funcionales) ---
   const changeMonth = (delta) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + delta);
@@ -71,7 +77,9 @@ function Eventos() {
     setExpandedEventId(null);
   };
 
-  const getDaysInMonth = () => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+  const getDaysInMonth = () => {
+    return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+  };
 
   const getFirstDayOfMonth = () => {
     const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -140,8 +148,10 @@ function Eventos() {
 
   return (
     <div className="eventos-win95">
+      {/* Header estilo Win95 */}
       <div className="date-picker-header">Calendario de Eventos</div>
 
+      {/* Selectores de mes y año */}
       <div className="date-picker-controls">
         <div className="control-group">
           <select 
@@ -149,7 +159,7 @@ function Eventos() {
             value={currentDate.getMonth()}
             onChange={(e) => {
               const newDate = new Date(currentDate);
-              newDate.setMonth(parseInt(e.target.value));
+              newDate.setMonth(parseInt(e.target.value, 10));
               setCurrentDate(newDate);
               setSelectedDay(null);
               setExpandedEventId(null);
@@ -169,12 +179,13 @@ function Eventos() {
             readOnly
           />
           <div className="year-spinner">
-            <button className="spinner-btn" onClick={() => changeYear(1)}>▲</button>
-            <button className="spinner-btn" onClick={() => changeYear(-1)}>▼</button>
+            <button className="spinner-btn" type="button" onClick={() => changeYear(1)}>▲</button>
+            <button className="spinner-btn" type="button" onClick={() => changeYear(-1)}>▼</button>
           </div>
         </div>
       </div>
 
+      {/* Calendario */}
       <div className="calendar-container">
         <div className="calendar-weekdays">
           {['D', 'L', 'M', 'X', 'J', 'V', 'S'].map(d => (
@@ -187,27 +198,37 @@ function Eventos() {
         </div>
       </div>
 
+      {/* Panel de eventos expandido */}
       {selectedDay && eventsByDay[selectedDay] && (
         <div className="events-panel">
           <div className="events-panel-header">
-            📅 {new Date(selectedDay + 'T00:00:00').toLocaleDateString('es', { day: 'numeric', month: 'long' })}
+            📅 {new Date(selectedDay + 'T00:00:00').toLocaleDateString('es', { 
+              day: 'numeric', 
+              month: 'long'
+            })}
           </div>
           <div className="events-list-panel">
             {eventsByDay[selectedDay].map(ev => (
               <div key={ev.id} className="event-card-wrapper">
                 <div className="event-card">
                   <div className="event-card-time">
-                    {ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }) : '⏰'}
+                    {ev.start?.dateTime 
+                      ? new Date(ev.start.dateTime).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
+                      : '⏰'}
                   </div>
                   <div className="event-card-content">
                     <div className="event-card-title">{ev.summary}</div>
                     {ev.location && <div className="event-card-location">📍 {ev.location}</div>}
                   </div>
-                  <button className="event-card-btn" onClick={() => toggleEventDetails(ev.id)}>
+                  <button 
+                    className="event-card-btn" 
+                    onClick={() => toggleEventDetails(ev.id)}
+                  >
                     {expandedEventId === ev.id ? 'Ocultar' : 'Ver'}
                   </button>
                 </div>
-
+                
+                {/* Descripción expandida */}
                 {expandedEventId === ev.id && (
                   <div className="event-description-expanded">
                     {ev.description ? (
