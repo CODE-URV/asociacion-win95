@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Proyectos.css';
 
-const SHEET_CSV_URL = import.meta.env.VITE_PROYECTOS_SHEET_URL;
-
 function Proyectos() {
     const [proyectos, setProyectos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,7 +12,6 @@ function Proyectos() {
         fetchProyectos();
     }, []);
 
-    // FUNCIÓN CRÍTICA: Separa por comas pero ignora las que están dentro de "comillas"
     const parseCSVLine = (line) => {
         const result = [];
         let cur = '';
@@ -37,21 +34,17 @@ function Proyectos() {
 
     const fetchProyectos = async () => {
         try {
-            if (!SHEET_CSV_URL) {
-                throw new Error('URL de Google Sheets no configurada');
+            const response = await fetch('/api/get-proyectos');
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err?.error || `Error ${response.status}`);
             }
-
-            const response = await fetch(SHEET_CSV_URL);
             const text = await response.text();
 
-            // Dividimos por líneas y quitamos la cabecera
             const rows = text.split(/\r?\n/).filter(row => row.trim() !== '').slice(1);
 
             const data = rows.map(row => {
-                // Usamos nuestra nueva función en lugar de .split(',')
                 const cols = parseCSVLine(row);
-
-                // Limpiamos posibles comillas sobrantes en los extremos de cada campo
                 const clean = (val) => val?.replace(/^"|"$/g, '').trim();
 
                 return {
@@ -68,7 +61,6 @@ function Proyectos() {
                 };
             }).filter(p => p.nombre);
 
-            console.log("Proyectos cargados:", data);
             setProyectos(data);
         } catch (err) {
             console.error("Error cargando proyectos:", err);

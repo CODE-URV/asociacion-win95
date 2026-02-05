@@ -1,9 +1,15 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './Inscripciones.css';
 import logoURV from '../../assets/code_urv_logo_nobg.png';
 
-// 🔥 PEGA AQUÍ TU URL DEL WEB APP (la que copiaste de Apps Script)
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0AwcqrCCvXcw1r3M5HHNxrkL0DimBgnq7khaVCBrKfUdKSK2XhDny7iafJ5asXr3ayw/exec';
+// Nota:
+// - Ya no hay URL directa del Apps Script aquí.
+// - La función serverless en /api/send-inscripcion (en Vercel) se encargará
+//   de reenviar al Apps Script usando la variable de entorno WEB_APP_URL
+// - Si defines VITE_PROXY_SECRET en tu .env local, se enviará como header
+//   'x-proxy-secret' (NO recomendable en producción porque lo expondrías al cliente).
+
+const CLIENT_PROXY_SECRET = import.meta.env.VITE_PROXY_SECRET || '';
 
 function Inscripciones() {
     const [status, setStatus] = useState('idle'); // idle | sending | sent | error
@@ -57,11 +63,16 @@ function Inscripciones() {
         setStatus('sending');
 
         try {
-            // Usamos mode: 'no-cors' para evitar bloqueos del navegador
-            await fetch(WEB_APP_URL, {
+            const headers = { 'Content-Type': 'application/json' };
+            // Opcional: si realmente necesitas enviar un proxy secret desde el cliente
+            // (no recomendado), define VITE_PROXY_SECRET en .env.local.
+            if (CLIENT_PROXY_SECRET) {
+                headers['x-proxy-secret'] = CLIENT_PROXY_SECRET;
+            }
+
+            const r = await fetch('/api/send-inscripcion', {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({
                     socioAnterior: form.socioAnterior,
                     talla: needsTalla ? form.talla : '',
@@ -71,13 +82,19 @@ function Inscripciones() {
                 }),
             });
 
-            // Con 'no-cors' no podemos leer la respuesta JSON, 
-            // pero si no hay error de red, es que se ha enviado.
+            if (!r.ok) {
+                // intentar parsear JSON de error
+                const body = await r.json().catch(() => null);
+                throw new Error(body?.error || `Error ${r.status}`);
+            }
+
+            // Si la petición fue exitosa
             setStatus('sent');
 
         } catch (error) {
+            console.error('Error enviando inscripción:', error);
             setStatus('error');
-            alert('Error de conexión: ' + error.message);
+            alert('Error de conexión: ' + (error.message || error));
         }
     };
 

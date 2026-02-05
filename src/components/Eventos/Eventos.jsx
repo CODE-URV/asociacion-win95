@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Eventos.css';
 
-const API_KEY = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
-const CALENDAR_ID = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
-
 function Eventos() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [eventsByDay, setEventsByDay] = useState({});
@@ -19,12 +16,12 @@ function Eventos() {
 
   useEffect(() => {
     fetchMonthEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate]);
 
   const fetchMonthEvents = async () => {
     setLoading(true);
     setError(null);
-    
     try {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
@@ -32,16 +29,14 @@ function Eventos() {
       const startOfMonth = new Date(year, month, 1).toISOString();
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
 
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        CALENDAR_ID
-      )}/events?key=${API_KEY}&timeMin=${startOfMonth}&timeMax=${endOfMonth}&singleEvents=true&orderBy=startTime`;
+      const url = `/api/get-calendar?timeMin=${encodeURIComponent(startOfMonth)}&timeMax=${encodeURIComponent(endOfMonth)}`;
 
       const response = await fetch(url);
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data?.error?.message || `Error ${response.status}`);
+        const err = await response.json();
+        throw new Error(err?.error || `Error ${response.status}`);
       }
+      const data = await response.json();
 
       const map = {};
       (data.items || []).forEach(ev => {
@@ -53,12 +48,13 @@ function Eventos() {
       setEventsByDay(map);
     } catch (err) {
       console.error('Error cargando eventos:', err);
-      setError(err.message);
+      setError(err.message || 'Error cargando eventos');
     } finally {
       setLoading(false);
     }
   };
 
+  // --- resto de la UI (sin cambios funcionales) ---
   const changeMonth = (delta) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + delta);
@@ -75,9 +71,7 @@ function Eventos() {
     setExpandedEventId(null);
   };
 
-  const getDaysInMonth = () => {
-    return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-  };
+  const getDaysInMonth = () => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
   const getFirstDayOfMonth = () => {
     const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -146,10 +140,8 @@ function Eventos() {
 
   return (
     <div className="eventos-win95">
-      {/* Header estilo Win95 */}
       <div className="date-picker-header">Calendario de Eventos</div>
 
-      {/* Selectores de mes y año */}
       <div className="date-picker-controls">
         <div className="control-group">
           <select 
@@ -183,7 +175,6 @@ function Eventos() {
         </div>
       </div>
 
-      {/* Calendario */}
       <div className="calendar-container">
         <div className="calendar-weekdays">
           {['D', 'L', 'M', 'X', 'J', 'V', 'S'].map(d => (
@@ -196,37 +187,27 @@ function Eventos() {
         </div>
       </div>
 
-      {/* Panel de eventos expandido */}
       {selectedDay && eventsByDay[selectedDay] && (
         <div className="events-panel">
           <div className="events-panel-header">
-            📅 {new Date(selectedDay + 'T00:00:00').toLocaleDateString('es', { 
-              day: 'numeric', 
-              month: 'long'
-            })}
+            📅 {new Date(selectedDay + 'T00:00:00').toLocaleDateString('es', { day: 'numeric', month: 'long' })}
           </div>
           <div className="events-list-panel">
             {eventsByDay[selectedDay].map(ev => (
               <div key={ev.id} className="event-card-wrapper">
                 <div className="event-card">
                   <div className="event-card-time">
-                    {ev.start.dateTime 
-                      ? new Date(ev.start.dateTime).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
-                      : '⏰'}
+                    {ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }) : '⏰'}
                   </div>
                   <div className="event-card-content">
                     <div className="event-card-title">{ev.summary}</div>
                     {ev.location && <div className="event-card-location">📍 {ev.location}</div>}
                   </div>
-                  <button 
-                    className="event-card-btn" 
-                    onClick={() => toggleEventDetails(ev.id)}
-                  >
+                  <button className="event-card-btn" onClick={() => toggleEventDetails(ev.id)}>
                     {expandedEventId === ev.id ? 'Ocultar' : 'Ver'}
                   </button>
                 </div>
-                
-                {/* Descripción expandida */}
+
                 {expandedEventId === ev.id && (
                   <div className="event-description-expanded">
                     {ev.description ? (
