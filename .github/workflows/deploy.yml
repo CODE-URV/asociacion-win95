@@ -3,7 +3,7 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - auto-deployment  # Delete when deployment development finishes
+      - hardcode-url  # Delete when deployment development finishes
       - master
 
 permissions:

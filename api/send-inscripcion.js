@@ -1,6 +1,15 @@
 export default async function handler(req, res) {
-  const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
-  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+  const allowedOrigins = [
+    process.env.ALLOWED_ORIGIN,
+    'https://code-urv.github.io',
+  ].filter(Boolean);
+
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-proxy-secret');
 
