@@ -34,7 +34,7 @@ function Proyectos() {
 
     const fetchProyectos = async () => {
         try {
-            const response = await fetch('/api/get-proyectos');
+            const response = await fetch('https://asociacion-win95.vercel.app/api/get-proyectos');
             if (!response.ok) {
                 const err = await response.json();
                 throw new Error(err?.error || `Error ${response.status}`);
