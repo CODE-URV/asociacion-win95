@@ -29,9 +29,7 @@ function Eventos() {
       const startOfMonth = new Date(year, month, 1).toISOString();
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
 
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        CALENDAR_ID
-      )}/events?key=${API_KEY}&timeMin=${startOfMonth}&timeMax=${endOfMonth}&singleEvents=true&orderBy=startTime`;
+      const url = `/api/get-calendar?timeMin=${encodeURIComponent(startOfMonth)}&timeMax=${encodeURIComponent(endOfMonth)}`;
 
       const response = await fetch(url);
       const data = await response.json();
