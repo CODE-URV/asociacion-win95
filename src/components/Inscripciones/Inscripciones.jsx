@@ -4,7 +4,7 @@ import logoURV from '../../assets/code_urv_logo_nobg.png';
 
 // Nota:
 // - Ya no hay URL directa del Apps Script aquí.
-// - La función serverless en /api/send-inscripcion (en Vercel) se encargará
+// - La función serverless en https://asociacion-win95.vercel.app/api/send-inscripcion (en Vercel) se encargará
 //   de reenviar al Apps Script usando la variable de entorno WEB_APP_URL
 // - Si defines VITE_PROXY_SECRET en tu .env local, se enviará como header
 //   'x-proxy-secret' (NO recomendable en producción porque lo expondrías al cliente).
@@ -70,7 +70,7 @@ function Inscripciones() {
                 headers['x-proxy-secret'] = CLIENT_PROXY_SECRET;
             }
 
-            const r = await fetch('/api/send-inscripcion', {
+            const r = await fetch('https://asociacion-win95.vercel.app/api/send-inscripcion', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
