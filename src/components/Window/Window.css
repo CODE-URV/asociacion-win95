@@ -238,3 +238,27 @@
   width: 100vw !important;
   height: calc(100vh - 48px) !important;
 }
+
+/* Acomplamos para movil */
+@media (max-width: 768px) {
+  .window {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    
+    height: calc(100vh - 48px) !important; 
+    
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .resize-handle {
+    display: none !important;
+  }
+
+  /* ocultar lo de hacer pantalla pequeña */
+  .window-maximize-btn {
+    display: none !important;
+  }
+}
