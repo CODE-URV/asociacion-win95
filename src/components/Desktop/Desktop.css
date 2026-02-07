@@ -36,6 +36,12 @@
   grid-template-columns: 1fr;
   gap: 24px;
   z-index: 10;
+
+  bottom: 20px;
+  
+  grid-template-rows: repeat(auto-fill, 100px); 
+  grid-auto-flow: column; 
+  grid-auto-columns: 80px;
 }
 
 .desktop-icon {
