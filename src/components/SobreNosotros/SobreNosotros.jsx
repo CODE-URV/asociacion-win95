@@ -6,14 +6,22 @@ import logoURV from '../../assets/code_urv_logo_nobg.png';
 const galeriaLocal = {
   excursiones: [
     { id: 'exc1', primary: new URL('../../assets/excursiones/excursion1.jpeg', import.meta.url).href, fallback: '' },
+    { id: 'exc1', primary: new URL('../../assets/excursiones/excursion2.JPG', import.meta.url).href, fallback: '' },
+    { id: 'exc1', primary: new URL('../../assets/excursiones/excursion3.jpeg', import.meta.url).href, fallback: '' },
+    { id: 'exc1', primary: new URL('../../assets/excursiones/excursion4.JPG', import.meta.url).href, fallback: '' },
   ],
   hackatones: [
     { id: 'hack1', primary: new URL('../../assets/hackatones/hackaton1.jpeg', import.meta.url).href, fallback: '' },
     { id: 'hack2', primary: new URL('../../assets/hackatones/hackaton2.jpg', import.meta.url).href, fallback: '' },
+    { id: 'hack1', primary: new URL('../../assets/hackatones/hackaton3.jpg', import.meta.url).href, fallback: '' },
+    { id: 'hack2', primary: new URL('../../assets/hackatones/hackaton4.jpg', import.meta.url).href, fallback: '' },
+    { id: 'hack2', primary: new URL('../../assets/hackatones/hackaton5.jpg', import.meta.url).href, fallback: '' },
   ],
   charlas: [
     { id: 'char1', primary: new URL('../../assets/charlas/charla1.jpeg', import.meta.url).href, fallback: '' },
     { id: 'char2', primary: new URL('../../assets/charlas/charla2.jpg', import.meta.url).href, fallback: '' },
+    { id: 'char1', primary: new URL('../../assets/charlas/charla3.jpg', import.meta.url).href, fallback: '' },
+    { id: 'char2', primary: new URL('../../assets/charlas/charla4.jpg', import.meta.url).href, fallback: '' },
   ],
 };
 
