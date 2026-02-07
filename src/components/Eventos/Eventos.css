@@ -1,15 +1,23 @@
+.eventos-win95,
+.eventos-win95 * {
+  box-sizing: border-box;
+}
+
+/* Contenedor principal */
 .eventos-win95 {
   background: linear-gradient(135deg, #d4d0c8 0%, #c0c0c0 100%);
   padding: 8px;
   font-family: "Segoe UI", "MS Sans Serif", Arial, sans-serif;
-  height: 100%;
+  height: 100%;            /* Debe ocupar el 100% del elemento padre */
   display: flex;
   flex-direction: column;
   border-radius: 4px;
-  box-shadow: 
+  box-shadow:
     inset 1px 1px 0 rgba(255,255,255,0.8),
     inset -1px -1px 0 rgba(0,0,0,0.2),
     0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;        /* Evita que el contenido se salga de la ventana */
+  min-height: 0;           /* Permite que los hijos flex se reduzcan correctamente */
 }
 
 /* Header con gradiente mejorado */
@@ -33,6 +41,7 @@
   gap: 10px;
   padding: 0 8px 12px 8px;
   flex-shrink: 0;
+  align-items: center;
 }
 
 .control-group {
@@ -44,7 +53,7 @@
 .win95-select {
   background: white;
   border: 1px solid #7f9db9;
-  box-shadow: 
+  box-shadow:
     inset 0 1px 2px rgba(0,0,0,0.1),
     0 1px 0 rgba(255,255,255,0.8);
   padding: 5px 24px 5px 8px;
@@ -62,7 +71,7 @@
 
 .win95-select:hover {
   border-color: #0066cc;
-  box-shadow: 
+  box-shadow:
     inset 0 1px 2px rgba(0,0,0,0.1),
     0 0 0 2px rgba(0,102,204,0.1);
 }
@@ -119,20 +128,21 @@
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
-/* Contenedor del calendario - FLEX GROW */
+/* Contenedor del calendario - ocupe todo el espacio restante */
 .calendar-container {
   background: white;
   border: 1px solid #b0b0b0;
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.8),
     0 2px 6px rgba(0,0,0,0.08);
   padding: 12px;
   margin: 0 8px 12px 8px;
   border-radius: 3px;
-  flex-grow: 1;
+  flex-grow: 1;           /* clave: ocupar espacio restante */
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 0;          /* necesario en contenedores flex para permitir scroll interno */
+  overflow: hidden;
 }
 
 /* Headers de días modernos */
@@ -156,15 +166,17 @@
   text-shadow: 0 1px 1px rgba(0,0,0,0.2);
 }
 
-/* Grilla de días - FLEX GROW */
+/* Grilla de días - expandir verticalmente para llenar el container */
 .calendar-grid-win95 {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
+  grid-auto-rows: 1fr;    /* filas repartidas equitativamente, llenan el alto */
   gap: 4px;
-  flex-grow: 1;
+  flex-grow: 1;           /* ocupa el espacio disponible dentro de .calendar-container */
+  min-height: 0;          /* permite que el grid reduzca su altura si es necesario */
 }
 
+/* Día del calendario */
 .calendar-day {
   display: flex;
   align-items: center;
@@ -179,6 +191,8 @@
   position: relative;
   color: #333;
   min-height: 0;
+  padding: 6px;
+  box-sizing: border-box;
 }
 
 .calendar-day.empty {
@@ -224,7 +238,7 @@
   color: white;
   border: 2px solid #003d7a;
   font-weight: 700;
-  box-shadow: 
+  box-shadow:
     0 3px 8px rgba(0,102,204,0.3),
     inset 0 1px 0 rgba(255,255,255,0.2);
   transform: scale(1.05);
@@ -234,13 +248,13 @@
   background: white;
 }
 
-/* Panel de eventos - ALTURA FIJA */
+/* Panel de eventos (abajo). Mantengo altura fija por defecto, se puede adaptar a flex si prefieres */
 .events-panel {
   background: white;
   border: 1px solid #b0b0b0;
   border-radius: 3px;
   margin: 0 8px 8px 8px;
-  height: 180px;
+  height: 180px;          /* Si quieres que cambie con la ventana, reemplaza por flex-basis o quitar height */
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -248,6 +262,7 @@
   flex-shrink: 0;
 }
 
+/* Header del panel de eventos */
 .events-panel-header {
   background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%);
   padding: 8px 12px;
@@ -258,12 +273,15 @@
   flex-shrink: 0;
 }
 
+/* Lista de eventos con scroll interno */
 .events-list-panel {
   overflow-y: auto;
   padding: 8px;
   flex-grow: 1;
+  min-height: 0;
 }
 
+/* Tarjeta de evento */
 .event-card {
   display: flex;
   gap: 10px;
@@ -364,7 +382,7 @@
   background: #ffebee;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado (solo webkit) */
 .events-list-panel::-webkit-scrollbar {
   width: 8px;
 }
@@ -439,7 +457,7 @@
   color: #999;
 }
 
-/* Ajuste del event-card para que no tenga margin-bottom */
+/* Ajuste del event-card para que no tenga margin-bottom extra */
 .event-card-wrapper .event-card {
   margin-bottom: 0;
 }
