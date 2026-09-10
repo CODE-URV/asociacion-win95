@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #008080;
+  background-color: var(--win-fondo);
   overflow: hidden;
   user-select: none;
   z-index: 0;
@@ -37,10 +37,10 @@
   gap: 24px;
   z-index: 10;
 
-  bottom: 50px;
-  
-  grid-template-rows: repeat(auto-fill, 100px); 
-  grid-auto-flow: column; 
+  bottom: var(--altura-barra);
+
+  grid-template-rows: repeat(auto-fill, 100px);
+  grid-auto-flow: column;
   grid-auto-columns: 80px;
 }
 
