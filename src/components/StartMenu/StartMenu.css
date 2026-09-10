@@ -11,12 +11,12 @@
 /* Menú Start */
 .start-menu {
   position: fixed;
-  bottom: 48px;
+  bottom: var(--altura-barra);
   left: 2px;
   width: 280px;
-  background-color: #c0c0c0;
+  background-color: var(--win-gris);
   border: 2px solid;
-  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  border-color: var(--win-claro) var(--win-negro) var(--win-negro) var(--win-claro);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   display: flex;
   z-index: 1001;
@@ -26,7 +26,7 @@
 /* Banda lateral con logo */
 .start-menu-sidebar {
   width: 32px;
-  background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+  background: linear-gradient(180deg, var(--win-titulo-1) 0%, var(--win-titulo-2) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,7 +83,7 @@
 }
 
 .start-menu-item:hover {
-  background-color: #000080;
+  background-color: var(--win-titulo-1);
   color: white;
 }
 
@@ -103,9 +103,9 @@
 .start-menu-separator {
   height: 2px;
   margin: 2px 4px;
-  background: linear-gradient(90deg, #808080 0%, #dfdfdf 100%);
-  border-top: 1px solid #808080;
-  border-bottom: 1px solid #dfdfdf;
+  background: linear-gradient(90deg, var(--win-oscuro) 0%, var(--win-claro) 100%);
+  border-top: 1px solid var(--win-oscuro);
+  border-bottom: 1px solid var(--win-claro);
 }
 
 .start-menu-mini-icon {
