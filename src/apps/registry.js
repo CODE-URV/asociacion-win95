@@ -10,6 +10,7 @@ import Proyectos from '../components/Proyectos/Proyectos';
 import Inscripciones from '../components/Inscripciones/Inscripciones';
 import Contacto from '../components/Contacto/Contacto';
 import Solitario from '../components/Solitario/Solitario';
+import AcercaDe from '../components/AcercaDe/AcercaDe';
 
 // --- Iconos (imágenes) ---
 import aboutUsIcon from '../assets/desktop_icons/about_us.png';
@@ -77,15 +78,15 @@ export const APPS = [
     seccion: 'juegos',
     tamaño: { width: 800, height: 600 },
   },
-  {
+    {
     id: 'config',
     nombre: 'Acerca de...',
     icono: '⚙️',
-    iconoImg: null,          // el menú lo muestra con emoji, no con imagen
-    componente: null,        // OJO: su contenido aún vive dentro de App.jsx (lo tratamos en el paso 4)
+    iconoImg: null,
+    componente: AcercaDe,          // ← antes era null
     seccion: 'sistema',
     tamaño: { width: 450, height: 550 },
-    tituloVentana: 'Acerca de CODE URV', // el título de la ventana difería del nombre del item
+    tituloVentana: 'Acerca de CODE URV',
   },
 ];
 
