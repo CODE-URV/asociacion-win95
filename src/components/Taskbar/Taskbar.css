@@ -3,12 +3,12 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 48px;
-  background-color: #c0c0c0;
-  border-top: 2px solid #dfdfdf;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
-  border-left: 2px solid #dfdfdf;
+  height: var(--altura-barra);
+  background-color: var(--win-gris);
+  border-top: 2px solid var(--win-claro);
+  border-right: 2px solid var(--win-oscuro);
+  border-bottom: 2px solid var(--win-oscuro);
+  border-left: 2px solid var(--win-claro);
   display: flex;
   align-items: center;
   padding: 2px;
@@ -16,7 +16,7 @@
   font-family: 'MS Sans Serif', Arial, sans-serif;
   z-index: 1000;
   pointer-events: auto;
-  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #000000;
+  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 var(--win-negro);
 }
 
 /* Botón Start */
@@ -25,10 +25,10 @@
   align-items: center;
   gap: 6px;
   padding: 2px 6px;
-  background-color: #c0c0c0;
-  border: 2px outset #dfdfdf;
-  border-right-color: #808080;
-  border-bottom-color: #808080;
+  background-color: var(--win-gris);
+  border: 2px outset var(--win-claro);
+  border-right-color: var(--win-oscuro);
+  border-bottom-color: var(--win-oscuro);
   cursor: pointer;
   font-weight: bold;
   font-size: 12px;
@@ -38,15 +38,15 @@
 }
 
 .start-button:hover {
-  background-color: #dfdfdf;
+  background-color: var(--win-claro);
 }
 
 .start-button:active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
 }
 
 .start-logo {
@@ -59,7 +59,7 @@
 .taskbar-separator {
   width: 2px;
   height: 32px;
-  background: linear-gradient(90deg, #dfdfdf 0%, #808080 100%);
+  background: linear-gradient(90deg, var(--win-claro) 0%, var(--win-oscuro) 100%);
   margin: 0 2px;
 }
 
@@ -76,8 +76,8 @@
 /* Reloj */
 .taskbar-clock {
   padding: 2px 6px;
-  background-color: #c0c0c0;
-  border: 2px inset #808080;
+  background-color: var(--win-gris);
+  border: 2px inset var(--win-oscuro);
   font-size: 12px;
   font-weight: bold;
   color: #000;
@@ -92,10 +92,10 @@
   align-items: center;
   gap: 4px;
   padding: 2px 6px;
-  background-color: #c0c0c0;
-  border: 2px outset #dfdfdf;
-  border-right-color: #808080;
-  border-bottom-color: #808080;
+  background-color: var(--win-gris);
+  border: 2px outset var(--win-claro);
+  border-right-color: var(--win-oscuro);
+  border-bottom-color: var(--win-oscuro);
   cursor: pointer;
   font-size: 12px;
   color: #000;
@@ -108,25 +108,25 @@
 }
 
 .taskbar-window-btn:hover {
-  background-color: #dfdfdf;
+  background-color: var(--win-claro);
 }
 
 .taskbar-window-btn:active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
 }
 
 /* Ventana activa (no minimizada) */
 .taskbar-window-btn.active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
-  background-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
+  background-color: var(--win-claro);
 }
 
 .taskbar-window-icon {
@@ -145,9 +145,9 @@
 /* Botón Start activo (cuando el menú está abierto) */
 .start-button.active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
-  background-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
+  background-color: var(--win-claro);
 }
