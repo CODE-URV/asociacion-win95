@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Eventos.css';
+import { getEventos } from '../../lib/api';
 
 function Eventos() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -15,10 +16,10 @@ function Eventos() {
   ];
 
   useEffect(() => {
-    fetchMonthEvents();
+    cargarEventos();
   }, [currentDate]);
 
-  const fetchMonthEvents = async () => {
+  const cargarEventos = async () => {
     setLoading(true);
     setError(null);
 
@@ -29,17 +30,11 @@ function Eventos() {
       const startOfMonth = new Date(year, month, 1).toISOString();
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
 
-      const url = `https://asociacion-win95.vercel.app/api/get-calendar?timeMin=${encodeURIComponent(startOfMonth)}&timeMax=${encodeURIComponent(endOfMonth)}`;
+      const items = await getEventos(startOfMonth, endOfMonth);
 
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data?.error?.message || `Error ${response.status}`);
-      }
-
+      // Agrupar los eventos por día (esto es "cómo lo pinta el calendario")
       const map = {};
-      (data.items || []).forEach(ev => {
+      items.forEach(ev => {
         const dateStr = (ev.start.dateTime || ev.start.date).split('T')[0];
         if (!map[dateStr]) map[dateStr] = [];
         map[dateStr].push(ev);
@@ -221,7 +216,6 @@ function Eventos() {
                   </button>
                 </div>
 
-                {/* Descripción expandida */}
                 {expandedEventId === ev.id && (
                   <div className="event-description-expanded">
                     {ev.description ? (
