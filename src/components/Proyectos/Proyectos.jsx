@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Proyectos.css';
+import { getProyectos } from '../../lib/api';
 
 function Proyectos() {
     const [proyectos, setProyectos] = useState([]);
@@ -9,58 +10,12 @@ function Proyectos() {
     const [filtro, setFiltro] = useState('Todos');
 
     useEffect(() => {
-        fetchProyectos();
+        cargarProyectos();
     }, []);
 
-    const parseCSVLine = (line) => {
-        const result = [];
-        let cur = '';
-        let inQuotes = false;
-
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                result.push(cur.trim());
-                cur = '';
-            } else {
-                cur += char;
-            }
-        }
-        result.push(cur.trim());
-        return result;
-    };
-
-    const fetchProyectos = async () => {
+    const cargarProyectos = async () => {
         try {
-            const response = await fetch('https://asociacion-win95.vercel.app/api/get-proyectos');
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err?.error || `Error ${response.status}`);
-            }
-            const text = await response.text();
-
-            const rows = text.split(/\r?\n/).filter(row => row.trim() !== '').slice(1);
-
-            const data = rows.map(row => {
-                const cols = parseCSVLine(row);
-                const clean = (val) => val?.replace(/^"|"$/g, '').trim();
-
-                return {
-                    id: clean(cols[0]),
-                    nombre: clean(cols[1]),
-                    descripcion: clean(cols[2]),
-                    responsable: clean(cols[3]),
-                    email: clean(cols[4]),
-                    estado: clean(cols[5]),
-                    progreso: clean(cols[6]),
-                    tecnologias: clean(cols[7])?.split('|').map(t => t.trim()).filter(Boolean) || [],
-                    repositorio: clean(cols[8]),
-                    colaboradores: clean(cols[9])?.split('|').map(c => c.trim()).filter(Boolean) || []
-                };
-            }).filter(p => p.nombre);
-
+            const data = await getProyectos();
             setProyectos(data);
         } catch (err) {
             console.error("Error cargando proyectos:", err);
