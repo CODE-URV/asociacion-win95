@@ -1,3 +1,17 @@
+:root {
+  /* Colores Win95 */
+  --win-gris: #c0c0c0;        /* gris base */
+  --win-claro: #dfdfdf;       /* borde claro (arriba-izquierda) */
+  --win-oscuro: #808080;      /* borde oscuro (abajo-derecha) */
+  --win-negro: #000000;       /* borde exterior duro */
+  --win-titulo-1: #000080;    /* azul marino del título */
+  --win-titulo-2: #1084d0;    /* azul claro del degradado del título */
+  --win-fondo: #008080;       /* turquesa del escritorio */
+
+  /* Medidas */
+  --altura-barra: 48px;       /* altura de la taskbar */
+}
+
 * {
   margin: 0;
   padding: 0;
