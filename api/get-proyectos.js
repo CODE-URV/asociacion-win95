@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   const allowedOrigins = [
     process.env.ALLOWED_ORIGIN,
     'https://code-urv.github.io',
+    'http://localhost:5173',
   ].filter(Boolean);
 
   const origin = req.headers.origin;
