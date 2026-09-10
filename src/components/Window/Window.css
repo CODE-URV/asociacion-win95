@@ -1,9 +1,9 @@
 .window {
   position: absolute;
-  background-color: #c0c0c0;
+  background-color: var(--win-gris);
   border: 2px solid;
-  border-color: #dfdfdf #808080 #808080 #dfdfdf;
-  box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #000000 inset;
+  border-color: var(--win-claro) var(--win-oscuro) var(--win-oscuro) var(--win-claro);
+  box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 var(--win-negro) inset;
   display: flex;
   flex-direction: column;
   font-family: 'MS Sans Serif', Arial, sans-serif;
@@ -14,7 +14,7 @@
 
 /* Title Bar - ESTILOS WIN95 */
 .window-title-bar {
-  background: linear-gradient(90deg, #000080 0%, #1084d7 100%);
+  background: linear-gradient(90deg, var(--win-titulo-1) 0%, var(--win-titulo-2) 100%);
   color: white;
   padding: 2px 2px;
   display: flex;
@@ -24,7 +24,7 @@
   flex-shrink: 0;
   height: 20px;
   user-select: none;
-  border-bottom: 1px solid #dfdfdf;
+  border-bottom: 1px solid var(--win-claro);
 }
 
 .window-title {
@@ -57,10 +57,10 @@
   width: 18px;
   height: 18px;
   padding: 0;
-  background-color: #c0c0c0;
-  border: 2px outset #dfdfdf;
-  border-right-color: #808080;
-  border-bottom-color: #808080;
+  background-color: var(--win-gris);
+  border: 2px outset var(--win-claro);
+  border-right-color: var(--win-oscuro);
+  border-bottom-color: var(--win-oscuro);
   font-size: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -73,27 +73,27 @@
 }
 
 .window-btn:hover {
-  background-color: #dfdfdf;
+  background-color: var(--win-claro);
 }
 
 .window-btn:active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
 }
 
 /* Contenido de la ventana */
 .window-content {
   flex: 1;
-  background-color: #c0c0c0;
+  background-color: var(--win-gris);
   overflow: auto;
   padding: 4px;
   font-size: 12px;
   color: #000;
-  border: 2px inset #808080;
-  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  border: 2px inset var(--win-oscuro);
+  border-color: var(--win-oscuro) var(--win-claro) var(--win-claro) var(--win-oscuro);
 }
 
 /* Scrollbar personalizado */
@@ -103,19 +103,19 @@
 }
 
 .window-content::-webkit-scrollbar-track {
-  background: #c0c0c0;
-  border: 1px inset #808080;
+  background: var(--win-gris);
+  border: 1px inset var(--win-oscuro);
 }
 
 .window-content::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  border: 2px outset #dfdfdf;
-  border-right-color: #808080;
-  border-bottom-color: #808080;
+  background: var(--win-gris);
+  border: 2px outset var(--win-claro);
+  border-right-color: var(--win-oscuro);
+  border-bottom-color: var(--win-oscuro);
 }
 
 .window-content::-webkit-scrollbar-thumb:hover {
-  background: #dfdfdf;
+  background: var(--win-claro);
 }
 
 /* Resize Handles */
@@ -204,10 +204,10 @@
   width: 18px;
   height: 18px;
   padding: 0;
-  background-color: #c0c0c0;
-  border: 2px outset #dfdfdf;
-  border-right-color: #808080;
-  border-bottom-color: #808080;
+  background-color: var(--win-gris);
+  border: 2px outset var(--win-claro);
+  border-right-color: var(--win-oscuro);
+  border-bottom-color: var(--win-oscuro);
   font-size: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -220,15 +220,15 @@
 }
 
 .window-maximize-btn:hover {
-  background-color: #dfdfdf;
+  background-color: var(--win-claro);
 }
 
 .window-maximize-btn:active {
   border-style: inset;
-  border-top-color: #808080;
-  border-left-color: #808080;
-  border-right-color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
+  border-top-color: var(--win-oscuro);
+  border-left-color: var(--win-oscuro);
+  border-right-color: var(--win-claro);
+  border-bottom-color: var(--win-claro);
 }
 
 /* Ventana maximizada */
@@ -236,7 +236,7 @@
   left: 0 !important;
   top: 0 !important;
   width: 100vw !important;
-  height: calc(100vh - 48px) !important;
+  height: calc(100vh - var(--altura-barra)) !important;
 }
 
 /* Acomplamos para movil */
@@ -246,9 +246,9 @@
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    
-    height: calc(100vh - 48px) !important; 
-    
+
+    height: calc(100vh - var(--altura-barra)) !important;
+
     border: none !important;
     box-shadow: none !important;
   }
