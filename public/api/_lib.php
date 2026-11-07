@@ -72,7 +72,8 @@ function api_fetch(string $url, string $method = 'GET', ?string $body = null, ar
     $response = curl_exec($ch);
     $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
     $error = curl_error($ch);
-    curl_close($ch);
+    // Sin curl_close(): no hace nada desde PHP 8.0 y en PHP 8.5 está deprecated
+    // (el aviso se colaría en la respuesta y rompería el JSON).
 
     if ($response === false) {
         throw new RuntimeException('cURL: ' . $error);

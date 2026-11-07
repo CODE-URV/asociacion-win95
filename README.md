@@ -13,26 +13,45 @@ Proyecto web con estética retro inspirada en Windows 95 para la asociación **C
 
 ## Requisitos
 
-- Node.js (recomendado: versión LTS)
+- Node.js 20.19 o superior (recomendado: la LTS actual)
 - npm (o pnpm/yarn si lo adaptas)
+- PHP 8.5 (solo para probar la API en local)
 
 ## Instalación
 
 1. Instala dependencias:
    - `npm install`
 
-2. Crea un archivo `.env` en la raíz del proyecto (junto a `package.json`):
-
-   - `VITE_PROYECTOS_SHEET_URL=TU_URL_CSV_PUBLICA_DE_GOOGLE_SHEETS`
-
-3. Arranca en desarrollo:
+2. Arranca en desarrollo:
    - `npm run dev`
+   - Las llamadas a `/api` se reenvían a la API desplegada. Para usar otra, pon `VITE_API_PROXY=https://tudominio.com` en `.env.local`.
 
-4. Build de producción:
+3. Build de producción:
    - `npm run build`
 
-5. Previsualizar el build:
-   - `npm run preview`
+4. Probar el build con la API PHP real en local:
+   - Copia `hostinger/config.example.php` como `config.php` en la raíz del repo y rellénalo.
+   - `npm run preview:php` → http://localhost:8000
+
+## API (PHP)
+
+La carpeta `public/api/` se copia tal cual a `dist/api/` en el build:
+
+- `GET /api/get-calendar?timeMin=…&timeMax=…` → eventos de Google Calendar
+- `GET /api/get-proyectos` → CSV del Google Sheet de proyectos
+- `POST /api/send-inscripcion` → reenvía el formulario a la Google Apps Script
+
+Las claves se leen de `config.php`, que en Hostinger va **fuera** de `public_html`
+(ver `hostinger/config.example.php`). Nunca se sube al repositorio.
+
+## Despliegue (Hostinger)
+
+Cada push a `master` compila la web y sube `dist/` por FTPS a `public_html`
+(`.github/workflows/deploy.yml`). Hace falta:
+
+- Una cuenta FTP en Hostinger con directorio `/public_html` (hPanel → Archivos → Cuentas FTP).
+- En GitHub, los secrets `FTP_SERVER` (solo la IP), `FTP_USERNAME` y `FTP_PASSWORD` de esa cuenta.
+- En Hostinger, **PHP 8.5** (hPanel → Avanzado → Configuración de PHP).
 
 ## Configuración de Google Sheets (Proyectos)
 
@@ -62,9 +81,17 @@ En Google Sheets:
 - Archivo → Compartir / Publicar en la web → Formato CSV (o “Valores separados por comas”)
 - Asegúrate de que el enlace sea accesible públicamente (solo lectura)
 
-## Variables de entorno
+## Configuración
 
-- `VITE_PROYECTOS_SHEET_URL`: URL del CSV publicado de Google Sheets
+En `config.php` (servidor):
+
+- `GOOGLE_CALENDAR_API_KEY`, `GOOGLE_CALENDAR_ID`: Google Calendar
+- `PROYECTOS_SHEET_URL`: URL del CSV publicado de Google Sheets
+- `WEB_APP_URL`: URL de la Google Apps Script de inscripciones
+
+En `.env.local` (solo desarrollo):
+
+- `VITE_API_PROXY`: a dónde reenvía `npm run dev` las llamadas a `/api`
 
 ## Notas de implementación
 

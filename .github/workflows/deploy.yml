@@ -2,11 +2,13 @@ name: Deploy a Hostinger
 
 # Cada push a master compila la web y sube dist/ por FTP a public_html.
 # Secrets necesarios (GitHub → Settings → Secrets and variables → Actions):
-#   FTP_SERVER    → hPanel → Archivos → Cuentas FTP → "Host FTP" (ej. ftp.tudominio.com o una IP)
+#   FTP_SERVER    → hPanel → Archivos → Cuentas FTP → "Host FTP": solo la IP, sin ftp://
 #   FTP_USERNAME  → usuario FTP (ej. u123456789 o u123456789.tudominio.com)
 #   FTP_PASSWORD  → contraseña FTP
 # Variable opcional (pestaña "Variables"):
-#   FTP_SERVER_DIR → carpeta destino en el servidor (por defecto public_html/)
+#   FTP_SERVER_DIR → carpeta destino dentro de la cuenta FTP (por defecto ./)
+# La cuenta FTP de despliegue se crea con directorio /public_html, así que su raíz
+# ya ES public_html y no puede tocar config.php (que está un nivel por encima).
 
 on:
   push:
@@ -46,4 +48,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
