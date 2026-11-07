@@ -2,6 +2,9 @@ Options -Indexes
 
 RewriteEngine On
 
-# Todo lo que llegue a /api/ lo atiende index.php (también /api/src/..., que así nunca se sirve)
-RewriteCond %{REQUEST_URI} !/index\.php$
+# index.php se ejecuta tal cual (sin esto, Apache/LiteSpeed reescribe index.php
+# a sí mismo una y otra vez y acaba en un error 500)
+RewriteRule ^index\.php$ - [L]
+
+# Todo lo demás de /api/ lo atiende index.php (también /api/src/..., que así nunca se sirve)
 RewriteRule ^ index.php [L,QSA]
