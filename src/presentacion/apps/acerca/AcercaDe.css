@@ -1,0 +1,78 @@
+.acerca {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-family: 'MS Sans Serif', Arial, sans-serif;
+}
+
+.acerca-icono {
+  width: 64px;
+  height: 64px;
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acerca-titulo {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.acerca-separador {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #808080 0%, #dfdfdf 100%);
+  margin: 8px 0;
+}
+
+.acerca-info {
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.acerca-info p {
+  margin: 8px 0;
+}
+
+.acerca-creditos {
+  text-align: center;
+  font-size: 11px;
+  color: #000;
+  line-height: 1.8;
+}
+
+.acerca-creditos p {
+  margin: 4px 0;
+}
+
+.acerca-creditos .acerca-creditos-titulo {
+  margin: 12px 0 4px 0;
+  font-weight: bold;
+}
+
+.acerca-creditos .acerca-creditos-nota {
+  margin: 12px 0 4px 0;
+  font-size: 10px;
+  color: #666;
+}
+
+.acerca-boton {
+  margin-top: 16px;
+  padding: 4px 20px;
+  background-color: #c0c0c0;
+  border: 2px outset #dfdfdf;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.acerca-boton:active {
+  border-style: inset;
+}

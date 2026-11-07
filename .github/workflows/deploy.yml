@@ -1,6 +1,8 @@
-name: Deploy a Hostinger
+name: Tests y despliegue a Hostinger
 
-# Cada push a master compila la web y sube dist/ por FTP a public_html.
+# - En cada push y pull request: lint + tests del frontend (Vitest) y de la API (PHP).
+# - En push a master, si todo pasa: compila y sube dist/ (web + API) por FTPS a public_html.
+#
 # Secrets necesarios (GitHub → Settings → Secrets and variables → Actions):
 #   FTP_SERVER    → hPanel → Archivos → Cuentas FTP → "Host FTP": solo la IP, sin ftp://
 #   FTP_USERNAME  → usuario FTP (ej. u123456789 o u123456789.tudominio.com)
@@ -12,16 +14,49 @@ name: Deploy a Hostinger
 
 on:
   push:
-    branches:
-      - master
+  pull_request:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-hostinger
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: curl, mbstring, pdo_sqlite
+          coverage: none
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests del frontend
+        run: npm test
+
+      - name: Tests de la API (PHP)
+        run: npm run test:php
+
   deploy:
+    needs: tests
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +72,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build (web + API en dist/api)
         run: npm run build
 
       - name: Subir dist/ a Hostinger por FTP

@@ -1,0 +1,81 @@
+.pc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+  background: #c0c0c0;
+}
+
+.pc-iconos {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 12px;
+  margin: 6px;
+  padding: 12px;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  overflow: auto;
+}
+
+.pc-icono {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 80px;
+  padding: 4px;
+  background: none;
+  border: 1px dotted transparent;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: default;
+}
+
+.pc-icono img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.pc-icono:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.pc-icono:focus span {
+  background: #000080;
+  color: #fff;
+}
+
+.pc-estado {
+  margin: 0 6px 6px;
+  padding: 2px 6px;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+.pc-ruta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-bottom: 1px solid #808080;
+}
+
+.pc-atras {
+  padding: 2px 8px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #000 #000 #fff;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pc-contenido {
+  flex: 1;
+  min-height: 0;
+}

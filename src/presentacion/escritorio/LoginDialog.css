@@ -1,0 +1,95 @@
+.login-fondo {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #008080;
+  z-index: 5000;
+}
+
+.login-dialogo {
+  width: 100%;
+  max-width: 460px;
+}
+
+.login-cerrar {
+  width: 18px;
+  height: 16px;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #000 #000 #fff;
+  cursor: pointer;
+}
+
+.login-cuerpo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 14px 12px 12px;
+}
+
+.login-icono {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.login-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-texto {
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.login-fila {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 6px;
+}
+
+.login-fila .win95-input {
+  width: 100%;
+  min-width: 0;
+}
+
+.login-pista {
+  margin: 2px 0 0;
+  color: #404040;
+  font-size: 11px;
+}
+
+.login-error {
+  margin: 0;
+  color: #c00000;
+}
+
+.login-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@media (max-width: 480px) {
+  .login-cuerpo {
+    grid-template-columns: 1fr;
+  }
+
+  .login-icono {
+    display: none;
+  }
+
+  .login-botones {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

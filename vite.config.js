@@ -11,15 +11,17 @@ export default defineConfig(({ mode }) => {
     // La web se sirve desde la raíz del dominio en Hostinger (public_html)
     base: '/',
     server: {
-      // En `npm run dev` no hay PHP: las llamadas a /api se reenvían a un servidor
-      // que sí lo tenga (por defecto, la API antigua de Vercel).
-      // Para usar la de Hostinger, pon VITE_API_PROXY=https://tudominio.com en .env.local
+      // En `npm run dev` las llamadas a /api van a la API PHP local (`npm run api`).
+      // Para usar otra, pon VITE_API_PROXY=https://... en .env.local
       proxy: {
         '/api': {
-          target: env.VITE_API_PROXY || 'https://asociacion-win95.vercel.app',
+          target: env.VITE_API_PROXY || 'http://localhost:8000',
           changeOrigin: true,
         },
       },
+    },
+    test: {
+      include: ['src/**/*.test.js'],
     },
   }
 })

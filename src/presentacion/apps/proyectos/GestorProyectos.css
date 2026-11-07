@@ -1,0 +1,154 @@
+/* Gestor de proyectos (Panel de control) — estilo Windows 95 */
+
+.gp {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+  background: #c0c0c0;
+}
+
+.gp-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+
+.gp-aviso {
+  margin: 6px 6px 0;
+  padding: 4px 8px;
+  background: #ffffe1;
+  border: 1px solid #000;
+}
+
+.gp-tabla-marco {
+  flex: 1;
+  margin: 6px;
+  overflow: auto;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: inset 1px 1px 0 #000;
+}
+
+.gp-mensaje {
+  padding: 16px;
+  text-align: center;
+}
+
+.gp-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gp-tabla th {
+  position: sticky;
+  top: 0;
+  padding: 3px 6px;
+  text-align: left;
+  font-weight: normal;
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+.gp-tabla td {
+  padding: 3px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  cursor: default;
+}
+
+.gp-tabla tr.gp-fila-seleccionada td {
+  background: #000080;
+  color: #fff;
+}
+
+.gp-punto {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border: 1px solid #000;
+}
+
+.gp-estado {
+  margin: 0 6px 6px;
+  padding: 2px 6px;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+/* Formulario */
+
+.gp-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  height: 100%;
+  overflow: auto;
+  font-size: 12px;
+  background: #c0c0c0;
+}
+
+.gp-formulario-titulo {
+  padding: 4px 8px;
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(90deg, #000080, #1084d0);
+}
+
+.gp-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 520px) {
+  .gp-fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gp-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gp-input {
+  padding: 3px 4px;
+  font-family: inherit;
+  font-size: 12px;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: inset 1px 1px 0 #000;
+}
+
+.gp-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.gp-error {
+  color: #c00000;
+  font-size: 11px;
+}
+
+.gp-error-general {
+  color: #c00000;
+}
+
+.gp-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+}

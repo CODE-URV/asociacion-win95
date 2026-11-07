@@ -2,105 +2,120 @@
 
 # CODE URV — Web estilo Windows 95
 
-Proyecto web con estética retro inspirada en Windows 95 para la asociación **CODE URV** (URV). Incluye escritorio, barra de tareas, sistema de ventanas y aplicaciones internas (p. ej. Proyectos con datos desde Google Sheets).
+Web de la asociación **CODE URV** (URV) con estética de Windows 95: inicio de sesión, escritorio, barra de tareas, ventanas y aplicaciones (Quién somos, Eventos, Proyectos, Hazte socio, Contacto, Solitario). Los administradores gestionan los proyectos desde el **Panel de control**.
 
-## Características
+- **Frontend:** React 19 + Vite
+- **Backend:** PHP 8.5 sin framework + MySQL (Hostinger)
+- **Arquitectura:** 4 capas en los dos lados — **Dominio, Aplicación, Infraestructura y Presentación**
 
-- UI retro estilo Windows 95 (ventanas, bordes, botones, taskbar, reloj)
-- Sistema de ventanas: abrir/cerrar/minimizar, foco (z-index), arrastrar y (si está activado) redimensionar
-- App “Proyectos” alimentada desde **Google Sheets** publicado como **CSV**
-- Diseño modular por componentes (React)
+## Arquitectura
 
-## Requisitos
+Regla de dependencias: cada capa solo usa las de dentro.
 
-- Node.js 20.19 o superior (recomendado: la LTS actual)
-- npm (o pnpm/yarn si lo adaptas)
-- PHP 8.5 (solo para probar la API en local)
+```
+Presentación  →  Aplicación  →  Dominio
+Infraestructura  →  Aplicación / Dominio
+```
 
-## Instalación
+| Capa | Qué contiene | No puede depender de |
+|---|---|---|
+| **Dominio** | Entidades y reglas puras (proyecto, inscripción, reglas del solitario, ventanas...) | nada |
+| **Aplicación** | Casos de uso y estado (hooks en React, clases en PHP) + puertos (interfaces) | Infraestructura concreta, Presentación |
+| **Infraestructura** | Acceso a datos: API HTTP, MySQL, Google Calendar, Apps Script, sesión PHP | Presentación |
+| **Presentación** | Componentes React / controladores HTTP | — |
 
-1. Instala dependencias:
-   - `npm install`
+### Frontend (`src/`)
 
-2. Arranca en desarrollo:
-   - `npm run dev`
-   - Las llamadas a `/api` se reenvían a la API desplegada. Para usar otra, pon `VITE_API_PROXY=https://tudominio.com` en `.env.local`.
+```
+src/
+├── main.jsx
+├── dominio/            ventanas, sesion, calendario, inscripcion, proyecto, solitario (+ *.test.js)
+├── aplicacion/         SesionProvider, useGestorVentanas, useEventosDelMes, useInscripcion, useProyectos, useSolitario
+├── infraestructura/    apiClient (fetch + CSRF + errores), sesionApi, eventosApi, inscripcionesApi, proyectosApi
+└── presentacion/
+    ├── App.jsx
+    ├── escritorio/     Shell, LoginDialog, Desktop, Taskbar, StartMenu, Window, WindowManager
+    ├── apps/           una carpeta por ventana + registro.js (lista de aplicaciones)
+    ├── estilos/        CSS global y piezas Win95 comunes
+    └── assets/         imágenes
+```
 
-3. Build de producción:
-   - `npm run build`
+Para añadir una ventana nueva: crea su carpeta en `src/presentacion/apps/` y añádela a `src/presentacion/apps/registro.js`.
 
-4. Probar el build con la API PHP real en local:
-   - Copia `hostinger/config.example.php` como `config.php` en la raíz del repo y rellénalo.
-   - `npm run preview:php` → http://localhost:8000
+### Backend (`api/`)
 
-## API (PHP)
+```
+api/
+├── index.php           punto de entrada único (/api/*)
+├── .htaccess           todo /api/* → index.php; src/ nunca se sirve
+├── src/
+│   ├── Dominio/        Proyecto, EstadoProyecto, Usuario, Evento, SolicitudInscripcion
+│   ├── Aplicacion/     CasosDeUso/ + Puertos/ (interfaces) + errores
+│   ├── Infraestructura/ BaseDeDatos/ (PDO), Google/, Http/, Sesion/, Config
+│   ├── Presentacion/   Http/ (Peticion, Respuesta, Router), Controladores/, Api (rutas y errores)
+│   └── Contenedor.php  raíz de composición: conecta las capas
+├── sql/                esquema MySQL (producción) y SQLite (desarrollo/tests)
+├── tests/              tests de PHP (php api/tests/ejecutar.php)
+├── herramientas/       servidor de desarrollo, crear administrador, empaquetado
+└── config.example.php  plantilla de config.php
+```
 
-La carpeta `public/api/` se copia tal cual a `dist/api/` en el build:
+### Endpoints
 
-- `GET /api/get-calendar?timeMin=…&timeMax=…` → eventos de Google Calendar
-- `GET /api/get-proyectos` → CSV del Google Sheet de proyectos
-- `POST /api/send-inscripcion` → reenvía el formulario a la Google Apps Script
+| Método | Ruta | Acceso |
+|---|---|---|
+| GET | `/api/proyectos` | público |
+| POST | `/api/proyectos` | admin + CSRF |
+| PUT / DELETE | `/api/proyectos/{id}` | admin + CSRF |
+| GET | `/api/eventos?desde=ISO&hasta=ISO` | público |
+| POST | `/api/inscripciones` | público |
+| GET / POST / DELETE | `/api/sesion` | consultar / iniciar / cerrar sesión |
 
-Las claves se leen de `config.php`, que en Hostinger va **fuera** de `public_html`
-(ver `hostinger/config.example.php`). Nunca se sube al repositorio.
+Seguridad: contraseña con `password_hash`, cookie de sesión `httpOnly` + `SameSite=Strict` + `Secure` limitada a `/api`, token CSRF en las peticiones de admin, bloqueo de 15 min tras 5 intentos fallidos (por IP y por usuario) y errores internos solo en el log.
+
+## Desarrollo
+
+Requisitos: Node.js 20.19+ y PHP 8.5 (con `curl`, `mbstring`, `pdo_sqlite`).
+
+```bash
+npm install
+npm run api        # API PHP en http://localhost:8000 (crea config.dev.php y api/dev.sqlite)
+npm run dev        # web en http://localhost:5173 (las llamadas a /api van a la API local)
+```
+
+Crear el administrador local:
+
+```bash
+php api/herramientas/crear-admin.php admin --dev
+```
+
+Para probar eventos e inscripciones reales en local, rellena las claves de Google en `config.dev.php`.
+
+Otros comandos:
+
+| Comando | Qué hace |
+|---|---|
+| `npm test` | tests del frontend (Vitest) |
+| `npm run test:php` | tests de la API |
+| `npm run lint` | ESLint |
+| `npm run build` | compila la web y copia la API en `dist/api` |
+| `npm run preview:php` | sirve `dist/` + la API en http://localhost:8000 |
 
 ## Despliegue (Hostinger)
 
-Cada push a `master` compila la web y sube `dist/` por FTPS a `public_html`
-(`.github/workflows/deploy.yml`). Hace falta:
+Cada push a `master` ejecuta lint y tests, y si pasan, compila y sube `dist/` (web + API) por FTPS a `public_html` (`.github/workflows/deploy.yml`).
 
-- Una cuenta FTP en Hostinger con directorio `/public_html` (hPanel → Archivos → Cuentas FTP).
-- En GitHub, los secrets `FTP_SERVER` (solo la IP), `FTP_USERNAME` y `FTP_PASSWORD` de esa cuenta.
-- En Hostinger, **PHP 8.5** (hPanel → Avanzado → Configuración de PHP).
+Configuración única en Hostinger:
 
-## Configuración de Google Sheets (Proyectos)
-
-Para evitar descuadres por comas, el frontend usa un parser CSV que respeta comillas. Aun así, es recomendable seguir un formato consistente.
-
-### Estructura esperada (orden de columnas)
-
-1. `id`
-2. `nombre`
-3. `descripcion`
-4. `responsable`
-5. `email`
-6. `estado`
-7. `progreso`
-8. `tecnologias` (valores separados por `|`)
-9. `repositorio`
-10. `colaboradores` (valores separados por `|`) ← opcional, pero soportado
-
-### Ejemplos de formato
-
-- `tecnologias`: `python | react | firebase`
-- `colaboradores`: `Pau | Laia | Marc`
-
-### Publicar como CSV
-
-En Google Sheets:
-- Archivo → Compartir / Publicar en la web → Formato CSV (o “Valores separados por comas”)
-- Asegúrate de que el enlace sea accesible públicamente (solo lectura)
-
-## Configuración
-
-En `config.php` (servidor):
-
-- `GOOGLE_CALENDAR_API_KEY`, `GOOGLE_CALENDAR_ID`: Google Calendar
-- `PROYECTOS_SHEET_URL`: URL del CSV publicado de Google Sheets
-- `WEB_APP_URL`: URL de la Google Apps Script de inscripciones
-
-En `.env.local` (solo desarrollo):
-
-- `VITE_API_PROXY`: a dónde reenvía `npm run dev` las llamadas a `/api`
-
-## Notas de implementación
-
-- El parser de CSV del componente de Proyectos evita que las comas dentro de `descripcion` rompan el mapeo de columnas (si el CSV viene correctamente entrecomillado).
-- Para listas (`tecnologias`, `colaboradores`), se utiliza el separador `|` por robustez.
+1. **PHP 8.5:** hPanel → Avanzado → Configuración de PHP.
+2. **Base de datos:** hPanel → Bases de datos → crear una base MySQL y su usuario. En phpMyAdmin, pestaña SQL, ejecuta `api/sql/mysql.sql`.
+3. **Administrador:** `php api/herramientas/crear-admin.php <usuario>` imprime el SQL que hay que ejecutar en phpMyAdmin.
+4. **`config.php`:** cópialo de `api/config.example.php` en `/home/uXXXX/domains/codeurv.com/` (al lado de `public_html`, **no dentro**) y rellénalo.
+5. **FTP:** cuenta FTP con directorio `/public_html` y, en GitHub, los secrets `FTP_SERVER` (solo la IP), `FTP_USERNAME` y `FTP_PASSWORD`.
 
 ## Licencia y derechos
 
-Este proyecto se distribuye bajo una licencia **propietaria** incluida en `LICENSE.md`.  
+Este proyecto se distribuye bajo una licencia **propietaria** incluida en `LICENSE.md`.
 En resumen:
 - El autor mantiene la titularidad (copyright).
 - Se concede derecho de uso **únicamente a CODE URV** (según términos del fichero `LICENSE.md`).

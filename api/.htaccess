@@ -1,0 +1,7 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Todo lo que llegue a /api/ lo atiende index.php (también /api/src/..., que así nunca se sirve)
+RewriteCond %{REQUEST_URI} !/index\.php$
+RewriteRule ^ index.php [L,QSA]
