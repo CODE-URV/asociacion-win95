@@ -3,6 +3,20 @@ import './LoginDialog.css';
 import logoURV from '../assets/code_urv_logo_nobg.png';
 import { NOMBRE_INVITADO, interpretarInicioSesion } from '../../dominio/sesion';
 
+/** Llave dorada estilo icono de Windows 95. */
+function IconoLlave() {
+  return (
+    <svg className="login-icono" viewBox="0 0 32 32" aria-hidden="true" shapeRendering="crispEdges">
+      <circle cx="10" cy="16" r="7" fill="#f7d33a" stroke="#000" strokeWidth="1.5" />
+      <circle cx="8" cy="16" r="2.2" fill="#c0c0c0" stroke="#000" strokeWidth="1" />
+      <rect x="16" y="14" width="14" height="4" fill="#f7d33a" stroke="#000" strokeWidth="1.5" />
+      <rect x="22" y="18" width="3" height="4" fill="#f7d33a" stroke="#000" strokeWidth="1.5" />
+      <rect x="27" y="18" width="3" height="6" fill="#f7d33a" stroke="#000" strokeWidth="1.5" />
+      <rect x="6" y="12" width="3" height="1.5" fill="#fff8c0" />
+    </svg>
+  );
+}
+
 /**
  * Diálogo "Iniciar sesión" estilo Windows 95.
  * Con "Invitado" (o vacío) y Aceptar se entra como invitado; Cancelar también entra como invitado.
@@ -39,8 +53,22 @@ function LoginDialog({ alEntrarComoInvitado, alIniciarSesion }) {
           <button type="button" className="login-cerrar" aria-label="Cerrar" onClick={alEntrarComoInvitado}>✕</button>
         </div>
 
+        {/* Franja superior como la del inicio de sesión de Windows 95 */}
+        <div className="login-banner">
+          <img src={logoURV} alt="" className="login-banner-logo" />
+          <div className="login-banner-texto">
+            <span className="login-banner-sub">Asociación de Estudiantes de Informática</span>
+            <span className="login-banner-marca">
+              CODE URV<sup>95</sup>
+            </span>
+          </div>
+        </div>
+        <div className="login-franja" aria-hidden="true">
+          <span /><span /><span /><span />
+        </div>
+
         <div className="login-cuerpo">
-          <img src={logoURV} alt="" className="login-icono" />
+          <IconoLlave />
 
           <div className="login-campos">
             <p className="login-texto">
