@@ -25,3 +25,6 @@ dist-ssr
 
 .env
 .env.local
+
+# Claves de la API PHP (solo en el servidor de Hostinger)
+config.php

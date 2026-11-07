@@ -2,8 +2,6 @@ import React, { useMemo, useState } from 'react';
 import './Inscripciones.css';
 import logoURV from '../../assets/code_urv_logo_nobg.png';
 
-const CLIENT_PROXY_SECRET = import.meta.env.VITE_PROXY_SECRET || '';
-
 function Inscripciones() {
     const [status, setStatus] = useState('idle'); // idle | sending | sent | error
 
@@ -58,14 +56,9 @@ function Inscripciones() {
         setStatus('sending');
 
         try {
-            const headers = { 'Content-Type': 'application/json' };
-            if (CLIENT_PROXY_SECRET) {
-                headers['x-proxy-secret'] = CLIENT_PROXY_SECRET;
-            }
-
-            const r = await fetch('https://asociacion-win95.vercel.app/api/send-inscripcion', {
+            const r = await fetch('/api/send-inscripcion', {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     socioAnterior: form.socioAnterior,
                     grado: form.grado,

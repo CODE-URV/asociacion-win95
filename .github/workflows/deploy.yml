@@ -1,22 +1,25 @@
-name: Deploy React App to GitHub Pages
+name: Deploy a Hostinger
+
+# Cada push a master compila la web y sube dist/ por FTP a public_html.
+# Secrets necesarios (GitHub → Settings → Secrets and variables → Actions):
+#   FTP_SERVER    → hPanel → Archivos → Cuentas FTP → "Host FTP" (ej. ftp.tudominio.com o una IP)
+#   FTP_USERNAME  → usuario FTP (ej. u123456789 o u123456789.tudominio.com)
+#   FTP_PASSWORD  → contraseña FTP
+# Variable opcional (pestaña "Variables"):
+#   FTP_SERVER_DIR → carpeta destino en el servidor (por defecto public_html/)
 
 on:
   push:
     branches:
-      - hardcode-url  # Delete when deployment development finishes
       - master
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+  workflow_dispatch:
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: true
+  group: deploy-hostinger
+  cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +29,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -35,19 +38,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Subir dist/ a Hostinger por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          path: dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
