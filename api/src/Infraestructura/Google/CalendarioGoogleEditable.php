@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace CodeUrv\Infraestructura\Google;
 
 use CodeUrv\Aplicacion\Puertos\CalendarioEditable;
+use CodeUrv\Aplicacion\Puertos\CalendarioEventos;
 use CodeUrv\Aplicacion\ServicioNoDisponible;
 use CodeUrv\Dominio\Evento;
 use CodeUrv\Infraestructura\Http\ClienteHttp;
 
 /** Lee y escribe en el Google Calendar de la asociación con la cuenta de servicio. */
-final class CalendarioGoogleEditable implements CalendarioEditable
+final class CalendarioGoogleEditable implements CalendarioEditable, CalendarioEventos
 {
     private const API = 'https://www.googleapis.com/calendar/v3/calendars/';
 

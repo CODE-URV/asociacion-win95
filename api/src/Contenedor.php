@@ -66,11 +66,7 @@ final class Contenedor
             ),
             new SesionControlador($autenticacion),
             new PublicoControlador(
-                fn () => new ConsultarEventos(new CalendarioGoogle(
-                    $this->http,
-                    $this->config->obligatorio('GOOGLE_CALENDAR_API_KEY'),
-                    $this->config->obligatorio('GOOGLE_CALENDAR_ID'),
-                )),
+                fn () => new ConsultarEventos($this->calendarioLectura()),
                 fn () => new EnviarInscripcion(new InscripcionesAppsScript(
                     $this->http,
                     $this->config->obligatorio('WEB_APP_URL'),
@@ -112,6 +108,23 @@ final class Contenedor
                 fn () => new GestionarCalendario($this->calendarioEditable(), $this->reloj()),
                 $autenticacion,
             ),
+        );
+    }
+
+    /**
+     * Calendario para la ventana pública Eventos. Con cuenta de servicio configurada se lee con ella
+     * (el calendario puede ser privado); si no, con la API key (el calendario tiene que ser público).
+     */
+    private function calendarioLectura(): CalendarioEventos
+    {
+        $cuenta = $this->config->texto('GOOGLE_CUENTA_SERVICIO');
+        if ($cuenta !== '' && is_file($cuenta)) {
+            return $this->calendarioEditable();
+        }
+        return new CalendarioGoogle(
+            $this->http,
+            $this->config->obligatorio('GOOGLE_CALENDAR_API_KEY'),
+            $this->config->obligatorio('GOOGLE_CALENDAR_ID'),
         );
     }
 
