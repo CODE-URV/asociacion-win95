@@ -7,7 +7,10 @@ namespace CodeUrv;
 use CodeUrv\Aplicacion\CasosDeUso\Autenticacion;
 use CodeUrv\Aplicacion\CasosDeUso\ConsultarEventos;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarInscripcion;
+use CodeUrv\Aplicacion\CasosDeUso\EnviarCertificados;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarActividades;
+use CodeUrv\Infraestructura\Correo\EnviadorSmtp;
+use CodeUrv\Infraestructura\Pdf\CertificadoPdf;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarProyectos;
 use CodeUrv\Aplicacion\CasosDeUso\ParticiparEnActividades;
 use CodeUrv\Infraestructura\BaseDeDatos\AjustesPdo;
@@ -84,6 +87,20 @@ final class Contenedor
                     $this->reloj(),
                 ),
                 $autenticacion,
+                fn () => new EnviarCertificados(
+                    new RepositorioActividadesPdo($this->pdo()),
+                    new RepositorioInscripcionesPdo($this->pdo()),
+                    new CertificadoPdf(dirname(__DIR__) . '/recursos/logo-certificado.jpg'),
+                    new EnviadorSmtp(
+                        $this->config->texto('SMTP_HOST', 'smtp.gmail.com'),
+                        (int) $this->config->texto('SMTP_PUERTO', '465'),
+                        $this->config->texto('SMTP_USUARIO'),
+                        $this->config->texto('SMTP_CONTRASENA'),
+                        $this->config->texto('SMTP_NOMBRE', 'CODE URV'),
+                    ),
+                    $this->config->texto('CERTIFICADO_PRESIDENTE'),
+                    $this->reloj(),
+                ),
             ),
             static fn (string $mensaje) => error_log('[codeurv-api] ' . $mensaje),
         );

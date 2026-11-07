@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CodeUrv\Presentacion\Controladores;
 
 use CodeUrv\Aplicacion\CasosDeUso\Autenticacion;
+use CodeUrv\Aplicacion\CasosDeUso\EnviarCertificados;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarActividades;
 use CodeUrv\Aplicacion\CasosDeUso\ParticiparEnActividades;
 use CodeUrv\Dominio\InscripcionActividad;
@@ -18,11 +19,13 @@ final class ActividadesControlador
      * @param \Closure(): ParticiparEnActividades $publico
      * @param \Closure(): GestionarActividades $gestion
      * @param \Closure(): Autenticacion $autenticacion
+     * @param \Closure(): EnviarCertificados $certificados
      */
     public function __construct(
         private readonly \Closure $publico,
         private readonly \Closure $gestion,
         private readonly \Closure $autenticacion,
+        private readonly \Closure $certificados,
     ) {
     }
 
@@ -130,6 +133,30 @@ final class ActividadesControlador
     {
         $this->admin($peticion)->eliminarInscripcion($p['id'], $p['inscripcion']);
         return Respuesta::sinContenido();
+    }
+
+    /** POST /admin/actividades/{id}/certificados — envía el siguiente lote */
+    public function enviarCertificados(Peticion $peticion, array $p): Respuesta
+    {
+        $this->admin($peticion);
+        return Respuesta::json(($this->certificados)()->enviarLote($p['id']));
+    }
+
+    /** POST /admin/actividades/{id}/inscripciones/{inscripcion}/certificado — reenviar a una persona */
+    public function reenviarCertificado(Peticion $peticion, array $p): Respuesta
+    {
+        $this->admin($peticion);
+        $inscripcion = ($this->certificados)()->reenviar($p['id'], $p['inscripcion']);
+        return Respuesta::json(['inscripcion' => $inscripcion->aArray()]);
+    }
+
+    /** GET /admin/actividades/{id}/certificado-previo[?inscripcion=ID] — PDF para revisar */
+    public function vistaPreviaCertificado(Peticion $peticion, array $p): Respuesta
+    {
+        $this->admin($peticion);
+        $inscripcion = ctype_digit($peticion->consulta('inscripcion')) ? (int) $peticion->consulta('inscripcion') : null;
+        $previo = ($this->certificados)()->vistaPrevia($p['id'], $inscripcion);
+        return Respuesta::archivo($previo['pdf'], 'application/pdf', $previo['nombre']);
     }
 
     /** GET /admin/actividades/{id}/qr */

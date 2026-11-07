@@ -57,7 +57,10 @@ final class Api
             ->agregar('GET', '/admin/actividades/{id}/inscripciones', $actividades->inscritos(...))
             ->agregar('PUT', '/admin/actividades/{id}/inscripciones/{inscripcion}', $actividades->marcarAsistencia(...))
             ->agregar('DELETE', '/admin/actividades/{id}/inscripciones/{inscripcion}', $actividades->eliminarInscripcion(...))
-            ->agregar('GET', '/admin/actividades/{id}/qr', $actividades->codigoQr(...));
+            ->agregar('GET', '/admin/actividades/{id}/qr', $actividades->codigoQr(...))
+            ->agregar('POST', '/admin/actividades/{id}/certificados', $actividades->enviarCertificados(...))
+            ->agregar('POST', '/admin/actividades/{id}/inscripciones/{inscripcion}/certificado', $actividades->reenviarCertificado(...))
+            ->agregar('GET', '/admin/actividades/{id}/certificado-previo', $actividades->vistaPreviaCertificado(...));
     }
 
     public function atender(Peticion $peticion): Respuesta

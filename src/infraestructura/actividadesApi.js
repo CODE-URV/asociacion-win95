@@ -60,6 +60,24 @@ export async function eliminarInscripcion(actividadId, inscripcionId) {
   await peticion(`/admin/actividades/${actividadId}/inscripciones/${inscripcionId}`, { metodo: 'DELETE' });
 }
 
+/** Envía el siguiente lote de certificados: { enviados, pendientes, error } */
+export function enviarLoteCertificados(actividadId) {
+  return peticion(`/admin/actividades/${actividadId}/certificados`, { metodo: 'POST' });
+}
+
+export async function reenviarCertificado(actividadId, inscripcionId) {
+  const { inscripcion } = await peticion(`/admin/actividades/${actividadId}/inscripciones/${inscripcionId}/certificado`, {
+    metodo: 'POST',
+  });
+  return inscripcion;
+}
+
+/** PDF de muestra (se abre en otra pestaña con la sesión de admin). */
+export function urlVistaPreviaCertificado(actividadId, inscripcionId = null) {
+  const consulta = inscripcionId ? `?inscripcion=${inscripcionId}` : '';
+  return `/api/admin/actividades/${actividadId}/certificado-previo${consulta}`;
+}
+
 /** { codigo, cambiaEn, ahora } — cambiaEn y ahora en segundos (hora del servidor) */
 export function obtenerCodigoQr(actividadId) {
   return peticion(`/admin/actividades/${actividadId}/qr`);

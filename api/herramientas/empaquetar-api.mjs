@@ -14,7 +14,7 @@ if (!existsSync('dist')) {
 }
 
 rmSync(destino, { recursive: true, force: true });
-for (const elemento of ['index.php', '.htaccess', 'src']) {
+for (const elemento of ['index.php', '.htaccess', 'src', 'recursos']) {
   cpSync(join(origen, elemento), join(destino, elemento), { recursive: true });
 }
 

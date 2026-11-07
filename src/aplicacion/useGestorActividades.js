@@ -79,6 +79,26 @@ export function useInscritos(actividadId) {
       await api.eliminarInscripcion(actividadId, inscripcionId);
       setInscritos((lista) => lista.filter((i) => i.id !== inscripcionId));
     },
+    reenviarCertificado: async (inscripcionId) =>
+      reemplazar(await api.reenviarCertificado(actividadId, inscripcionId)),
+    urlVistaPrevia: (inscripcionId = null) => api.urlVistaPreviaCertificado(actividadId, inscripcionId),
+
+    /**
+     * Envía todos los certificados pendientes por lotes, avisando del progreso.
+     * Devuelve { enviados, error }.
+     */
+    enviarCertificados: async (alProgresar) => {
+      let total = 0;
+      for (;;) {
+        const lote = await api.enviarLoteCertificados(actividadId);
+        total += lote.enviados;
+        alProgresar?.({ enviados: total, pendientes: lote.pendientes });
+        if (lote.error || lote.pendientes === 0 || lote.enviados === 0) {
+          await recargar();
+          return { enviados: total, error: lote.error };
+        }
+      }
+    },
   };
 }
 

@@ -44,18 +44,43 @@ function lanza(string $clase, callable $codigo): \Throwable
 }
 
 /** Controlador de actividades con SQLite y un reloj controlable desde el test. */
-function montarActividades(\PDO $pdo, \Closure $autenticacion, \Closure $reloj): \CodeUrv\Presentacion\Controladores\ActividadesControlador
+function montarActividades(\PDO $pdo, \Closure $autenticacion, \Closure $reloj, ?CorreoEnMemoria $correo = null): \CodeUrv\Presentacion\Controladores\ActividadesControlador
 {
     $actividades = new \CodeUrv\Infraestructura\BaseDeDatos\RepositorioActividadesPdo($pdo);
     $inscripciones = new \CodeUrv\Infraestructura\BaseDeDatos\RepositorioInscripcionesPdo($pdo);
     $ajustes = new \CodeUrv\Infraestructura\BaseDeDatos\AjustesPdo($pdo);
+    $correo ??= new CorreoEnMemoria();
     return new \CodeUrv\Presentacion\Controladores\ActividadesControlador(
         static fn () => new \CodeUrv\Aplicacion\CasosDeUso\ParticiparEnActividades(
             $actividades, $inscripciones, $ajustes, $reloj, static fn () => strtoupper(bin2hex(random_bytes(6))),
         ),
         static fn () => new \CodeUrv\Aplicacion\CasosDeUso\GestionarActividades($actividades, $inscripciones, $ajustes, $reloj),
         $autenticacion,
+        static fn () => new \CodeUrv\Aplicacion\CasosDeUso\EnviarCertificados(
+            $actividades,
+            $inscripciones,
+            new \CodeUrv\Infraestructura\Pdf\CertificadoPdf(__DIR__ . '/../recursos/logo-certificado.jpg'),
+            $correo,
+            'Oriol Algar',
+            $reloj,
+        ),
     );
+}
+
+/** Correo falso: guarda lo que se enviaría; puede fallar a partir de cierto envío. */
+final class CorreoEnMemoria implements \CodeUrv\Aplicacion\Puertos\EnviadorCorreo
+{
+    /** @var list<array{para: string, asunto: string, texto: string, adjunto: array|null}> */
+    public array $enviados = [];
+    public ?int $fallarDesde = null;
+
+    public function enviar(string $para, string $asunto, string $texto, ?array $adjunto = null): void
+    {
+        if ($this->fallarDesde !== null && count($this->enviados) >= $this->fallarDesde) {
+            throw new \CodeUrv\Aplicacion\ServicioNoDisponible('El servidor de correo ha rechazado el usuario o la contraseña de aplicación.');
+        }
+        $this->enviados[] = ['para' => $para, 'asunto' => $asunto, 'texto' => $texto, 'adjunto' => $adjunto];
+    }
 }
 
 function pdoSqlite(): \PDO
