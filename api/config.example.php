@@ -11,6 +11,10 @@ return [
     // Google Calendar (eventos)
     'GOOGLE_CALENDAR_API_KEY' => '',
     'GOOGLE_CALENDAR_ID'      => '',
+    // Cuenta de servicio de Google para crear/editar eventos desde el Panel de control:
+    // el JSON descargado de Google Cloud, en esta misma carpeta (fuera de public_html).
+    // El calendario tiene que estar compartido con su client_email ("Hacer cambios en eventos").
+    'GOOGLE_CUENTA_SERVICIO'  => __DIR__ . '/google-cuenta-servicio.json',
 
     // Google Apps Script que guarda las inscripciones de socios (termina en /exec)
     'WEB_APP_URL'             => '',

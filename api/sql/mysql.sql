@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS actividades (
   plazas INT UNSIGNED NULL,
   publicada TINYINT(1) NOT NULL DEFAULT 0,
   inscripciones_abiertas TINYINT(1) NOT NULL DEFAULT 1,
+  en_calendario TINYINT(1) NOT NULL DEFAULT 0,
+  evento_calendario_id VARCHAR(255) NULL,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_actividades_inicio (inicio)

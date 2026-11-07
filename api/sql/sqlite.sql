@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS actividades (
   plazas INTEGER NULL,
   publicada INTEGER NOT NULL DEFAULT 0,
   inscripciones_abiertas INTEGER NOT NULL DEFAULT 1,
+  en_calendario INTEGER NOT NULL DEFAULT 0,
+  evento_calendario_id TEXT NULL,
   creado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

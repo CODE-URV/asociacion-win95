@@ -13,7 +13,7 @@ function Campo({ etiqueta, error, children }) {
 
 /** Alta y edición de una actividad (Panel de control). */
 export default function FormularioActividad({ inicial, titulo, alGuardar, alCancelar }) {
-  const [campos, setCampos] = useState({ ...inicial, plazas: inicial.plazas ?? '' });
+  const [campos, setCampos] = useState({ ...inicial, plazas: inicial.plazas ?? '', enCalendario: inicial.enCalendario ?? false });
   const [errores, setErrores] = useState({});
   const [errorGeneral, setErrorGeneral] = useState(null);
   const [guardando, setGuardando] = useState(false);
@@ -35,6 +35,7 @@ export default function FormularioActividad({ inicial, titulo, alGuardar, alCanc
       plazas: String(campos.plazas).trim() === '' ? null : Number(campos.plazas),
       publicada: campos.publicada,
       inscripcionesAbiertas: campos.inscripcionesAbiertas,
+      enCalendario: campos.enCalendario,
     };
 
     const locales = validarActividad(datos);
@@ -104,6 +105,10 @@ export default function FormularioActividad({ inicial, titulo, alGuardar, alCanc
       <label className="gp-casilla">
         <input type="checkbox" checked={campos.inscripcionesAbiertas} onChange={cambiar('inscripcionesAbiertas')} />
         Inscripciones abiertas
+      </label>
+      <label className="gp-casilla">
+        <input type="checkbox" checked={campos.enCalendario} onChange={cambiar('enCalendario')} />
+        Añadir al calendario de eventos (se ve en la web y en Google Calendar cuando está publicada)
       </label>
 
       {errorGeneral && <div className="gp-error-general">❌ {errorGeneral}</div>}

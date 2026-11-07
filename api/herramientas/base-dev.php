@@ -31,6 +31,12 @@ $pdo = \CodeUrv\Infraestructura\BaseDeDatos\ConexionPdo::desdeConfig($config);
 
 if (str_starts_with($config->texto('DB_DSN'), 'sqlite:')) {
     $pdo->exec((string) file_get_contents(__DIR__ . '/../sql/sqlite.sql'));
+    // Columnas añadidas después (migraciones) a una base de desarrollo ya creada
+    $columnas = array_column($pdo->query('PRAGMA table_info(actividades)')->fetchAll(), 'name');
+    if (!in_array('en_calendario', $columnas, true)) {
+        $pdo->exec('ALTER TABLE actividades ADD COLUMN en_calendario INTEGER NOT NULL DEFAULT 0');
+        $pdo->exec('ALTER TABLE actividades ADD COLUMN evento_calendario_id TEXT NULL');
+    }
 }
 
 return $pdo;

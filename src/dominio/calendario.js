@@ -57,3 +57,46 @@ export function horaDelEvento(evento) {
   if (evento.todoElDia) return null;
   return new Date(evento.inicio).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
+
+// ---------- Edición de eventos (Panel de control) ----------
+
+export function eventoVacio() {
+  return { titulo: '', descripcion: '', lugar: '', todoElDia: false, inicio: '', fin: '' };
+}
+
+/** { campo: mensaje } — mismas reglas que api/src/Dominio/Evento.php */
+export function validarEvento(evento) {
+  const errores = {};
+  if (!evento.titulo.trim()) errores.titulo = 'El título es obligatorio.';
+  if (!evento.inicio) errores.inicio = 'Indica cuándo empieza.';
+  if (!evento.fin) errores.fin = 'Indica cuándo acaba.';
+  if (evento.inicio && evento.fin) {
+    const malOrden = evento.todoElDia ? evento.fin < evento.inicio : evento.fin <= evento.inicio;
+    if (malOrden) errores.fin = 'Tiene que acabar después de empezar.';
+  }
+  return errores;
+}
+
+/** Al marcar o desmarcar "todo el día" se adapta el formato de las fechas. */
+export function cambiarTodoElDia(evento, todoElDia) {
+  const convertir = (valor, hora) => {
+    if (!valor) return '';
+    return todoElDia ? valor.slice(0, 10) : `${valor.slice(0, 10)}T${hora}`;
+  };
+  return { ...evento, todoElDia, inicio: convertir(evento.inicio, '18:00'), fin: convertir(evento.fin, '19:00') };
+}
+
+/** "vie 5 dic · todo el día" / "mié 18 nov · 15:10–16:10" */
+export function textoFechaEvento(evento) {
+  const dia = (texto) => new Date(texto.length === 10 ? `${texto}T00:00` : texto)
+    .toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+  if (evento.todoElDia) {
+    return evento.fin && evento.fin !== evento.inicio
+      ? `${dia(evento.inicio)} – ${dia(evento.fin)} · todo el día`
+      : `${dia(evento.inicio)} · todo el día`;
+  }
+  const hora = (texto) => texto.slice(11, 16);
+  return evento.inicio.slice(0, 10) === evento.fin.slice(0, 10)
+    ? `${dia(evento.inicio)} · ${hora(evento.inicio)}–${hora(evento.fin)}`
+    : `${dia(evento.inicio)} ${hora(evento.inicio)} – ${dia(evento.fin)} ${hora(evento.fin)}`;
+}

@@ -92,22 +92,22 @@ final class ActividadesControlador
     /** POST /admin/actividades */
     public function crear(Peticion $peticion): Respuesta
     {
-        $actividad = $this->admin($peticion)->crear($peticion->json());
-        return Respuesta::json(['actividad' => $actividad->aArray()], 201);
+        $r = $this->admin($peticion)->crear($peticion->json());
+        return Respuesta::json(['actividad' => $r['actividad']->aArray(), 'aviso' => $r['aviso']], 201);
     }
 
     /** PUT /admin/actividades/{id} */
     public function actualizar(Peticion $peticion, array $p): Respuesta
     {
-        $actividad = $this->admin($peticion)->actualizar($p['id'], $peticion->json());
-        return Respuesta::json(['actividad' => $actividad->aArray()]);
+        $r = $this->admin($peticion)->actualizar($p['id'], $peticion->json());
+        return Respuesta::json(['actividad' => $r['actividad']->aArray(), 'aviso' => $r['aviso']]);
     }
 
     /** DELETE /admin/actividades/{id} */
     public function eliminar(Peticion $peticion, array $p): Respuesta
     {
-        $this->admin($peticion)->eliminar($p['id']);
-        return Respuesta::sinContenido();
+        $aviso = $this->admin($peticion)->eliminar($p['id']);
+        return $aviso === null ? Respuesta::sinContenido() : Respuesta::json(['aviso' => $aviso]);
     }
 
     /** GET /admin/actividades/{id}/inscripciones */

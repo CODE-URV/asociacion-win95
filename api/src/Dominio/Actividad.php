@@ -36,11 +36,14 @@ final class Actividad
         public readonly ?int $plazas,
         public readonly bool $publicada,
         public readonly bool $inscripcionesAbiertas,
+        public readonly bool $enCalendario = false,
+        /** Id del evento en Google Calendar (lo gestiona la aplicación, no el formulario) */
+        public readonly ?string $eventoCalendarioId = null,
     ) {
     }
 
     /** @param array<string, mixed> $datos */
-    public static function desdeDatos(array $datos, ?int $id = null): self
+    public static function desdeDatos(array $datos, ?int $id = null, ?string $eventoCalendarioId = null): self
     {
         $errores = [];
 
@@ -90,7 +93,7 @@ final class Actividad
             $errores['plazas'] = 'Las plazas son un número entre 1 y ' . self::MAX_PLAZAS . ', o vacío si no hay límite.';
         }
 
-        foreach (['publicada', 'inscripcionesAbiertas'] as $campo) {
+        foreach (['publicada', 'inscripcionesAbiertas', 'enCalendario'] as $campo) {
             if (!is_bool($datos[$campo] ?? false)) {
                 $errores[$campo] = 'Debe ser sí o no.';
             }
@@ -113,6 +116,8 @@ final class Actividad
             $plazas,
             (bool) ($datos['publicada'] ?? false),
             (bool) ($datos['inscripcionesAbiertas'] ?? false),
+            (bool) ($datos['enCalendario'] ?? false),
+            $eventoCalendarioId,
         );
     }
 
@@ -130,7 +135,33 @@ final class Actividad
 
     public function conId(int $id): self
     {
-        return self::desdeDatos($this->aArray(), $id);
+        return self::desdeDatos($this->aArray(), $id, $this->eventoCalendarioId);
+    }
+
+    public function conEventoCalendario(?string $eventoId): self
+    {
+        return self::desdeDatos($this->aArray(), $this->id, $eventoId);
+    }
+
+    /** Solo las actividades publicadas y marcadas aparecen en el calendario. */
+    public function debeEstarEnCalendario(): bool
+    {
+        return $this->enCalendario && $this->publicada;
+    }
+
+    /** Evento de Google Calendar que corresponde a esta actividad. */
+    public function aEvento(): Evento
+    {
+        $descripcion = trim($this->descripcion . "\n\n" . ($this->ponente !== '' ? "Ponente: {$this->ponente}\n" : '')
+            . 'Inscripciones en https://codeurv.com (Charlas y talleres)');
+        return Evento::desdeDatos([
+            'titulo' => mb_substr($this->titulo, 0, Evento::LIMITES['titulo']),
+            'descripcion' => mb_substr($descripcion, 0, Evento::LIMITES['descripcion']),
+            'lugar' => mb_substr($this->lugar, 0, Evento::LIMITES['lugar']),
+            'inicio' => $this->inicio->format('Y-m-d\TH:i'),
+            'fin' => $this->fin->format('Y-m-d\TH:i'),
+            'todoElDia' => false,
+        ], $this->eventoCalendarioId ?? '');
     }
 
     /** null si se puede apuntar; si no, el motivo. */
@@ -174,6 +205,7 @@ final class Actividad
             'plazas' => $this->plazas,
             'publicada' => $this->publicada,
             'inscripcionesAbiertas' => $this->inscripcionesAbiertas,
+            'enCalendario' => $this->enCalendario,
         ];
     }
 }

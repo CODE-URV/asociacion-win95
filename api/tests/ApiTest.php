@@ -138,7 +138,7 @@ return [
         [$atender] = $montar();
         $r = $atender('GET', '/eventos', null, [], ['desde' => '2026-11-01T00:00:00Z', 'hasta' => '2026-11-30T23:59:59Z']);
         igual(200, $r->estado);
-        igual(['id', 'titulo', 'descripcion', 'lugar', 'inicio', 'todoElDia'], array_keys($r->datos['eventos'][0]));
+        igual(['id', 'titulo', 'descripcion', 'lugar', 'inicio', 'fin', 'todoElDia'], array_keys($r->datos['eventos'][0]));
     },
 
     'si Google falla: 502 genérico al navegador y el detalle al log' => static function () use ($montar) {

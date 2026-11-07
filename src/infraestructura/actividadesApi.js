@@ -29,18 +29,19 @@ export async function listarActividadesAdmin() {
   return actividades;
 }
 
-export async function crearActividad(datos) {
-  const { actividad } = await peticion('/admin/actividades', { metodo: 'POST', cuerpo: datos });
-  return actividad;
+/** { actividad, aviso } — aviso si no se ha podido actualizar el calendario */
+export function crearActividad(datos) {
+  return peticion('/admin/actividades', { metodo: 'POST', cuerpo: datos });
 }
 
-export async function actualizarActividad(id, datos) {
-  const { actividad } = await peticion(`/admin/actividades/${id}`, { metodo: 'PUT', cuerpo: datos });
-  return actividad;
+export function actualizarActividad(id, datos) {
+  return peticion(`/admin/actividades/${id}`, { metodo: 'PUT', cuerpo: datos });
 }
 
+/** Devuelve el aviso (o null) si no se ha podido quitar del calendario. */
 export async function eliminarActividad(id) {
-  await peticion(`/admin/actividades/${id}`, { metodo: 'DELETE' });
+  const respuesta = await peticion(`/admin/actividades/${id}`, { metodo: 'DELETE' });
+  return respuesta?.aviso ?? null;
 }
 
 export async function listarInscritos(actividadId) {

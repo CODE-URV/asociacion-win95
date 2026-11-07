@@ -3,11 +3,14 @@ import './PanelControl.css';
 import projectsIcon from '../../assets/desktop_icons/projects.png';
 import GestorProyectos from '../proyectos/GestorProyectos';
 import GestorActividades from '../actividades/GestorActividades';
+import GestorCalendario from '../calendario/GestorCalendario';
+import eventsIcon from '../../assets/desktop_icons/events.png';
 import useModoTactil from '../../escritorio/useModoTactil';
 
 // Cada "applet" del Panel de control. Para añadir más, basta con otra entrada.
 const APPLETS = [
   { id: 'actividades', nombre: 'Actividades', icono: '🎤', componente: GestorActividades },
+  { id: 'calendario', nombre: 'Calendario', imagen: eventsIcon, componente: GestorCalendario },
   { id: 'proyectos', nombre: 'Proyectos', imagen: projectsIcon, componente: GestorProyectos },
 ];
 

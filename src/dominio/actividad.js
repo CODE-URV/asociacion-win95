@@ -34,6 +34,7 @@ export function actividadVacia() {
     plazas: null,
     publicada: false,
     inscripcionesAbiertas: true,
+    enCalendario: true,
   };
 }
 

@@ -78,6 +78,21 @@ api/
 | GET / PUT / DELETE | `/api/admin/actividades/{id}/inscripciones[/{id}]` | admin: inscritos y asistencia manual |
 | GET | `/api/admin/actividades/{id}/qr` | admin: código actual para el proyector |
 
+### Calendario desde el Panel de control
+
+**Panel de control → Calendario** crea, edita y borra eventos del mismo Google Calendar que se usa en el móvil
+(lo de un lado se ve en el otro). Las actividades con la casilla "Añadir al calendario" aparecen solas
+mientras están publicadas, y se actualizan o quitan al editarlas o borrarlas.
+
+Para escribir en el calendario el servidor usa una **cuenta de servicio de Google** (JWT RS256, sin librerías):
+
+1. Google Cloud Console → proyecto nuevo → activar **Google Calendar API**.
+2. IAM → Cuentas de servicio → crear una → Claves → Añadir clave → **JSON**.
+3. Subir el JSON como `google-cuenta-servicio.json` junto a `config.php` (fuera de `public_html`).
+4. En Google Calendar → ajustes del calendario → **Compartir con personas concretas** → el `client_email`
+   de la cuenta con permiso **"Hacer cambios en eventos"**.
+5. `config.php`: `GOOGLE_CUENTA_SERVICIO` (ruta del JSON) y `GOOGLE_CALENDAR_ID`.
+
 ### Charlas y talleres: asistencia con QR
 
 1. El admin crea la actividad en **Panel de control → Actividades** y la publica.

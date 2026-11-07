@@ -9,6 +9,10 @@ use CodeUrv\Aplicacion\CasosDeUso\ConsultarEventos;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarInscripcion;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarCertificados;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarActividades;
+use CodeUrv\Aplicacion\CasosDeUso\GestionarCalendario;
+use CodeUrv\Infraestructura\Google\CalendarioGoogleEditable;
+use CodeUrv\Infraestructura\Google\TokenCuentaServicio;
+use CodeUrv\Presentacion\Controladores\CalendarioControlador;
 use CodeUrv\Infraestructura\Correo\EnviadorSmtp;
 use CodeUrv\Infraestructura\Pdf\CertificadoPdf;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarProyectos;
@@ -85,6 +89,7 @@ final class Contenedor
                     new RepositorioInscripcionesPdo($this->pdo()),
                     new AjustesPdo($this->pdo()),
                     $this->reloj(),
+                    $this->calendarioEditable(),
                 ),
                 $autenticacion,
                 fn () => new EnviarCertificados(
@@ -103,6 +108,20 @@ final class Contenedor
                 ),
             ),
             static fn (string $mensaje) => error_log('[codeurv-api] ' . $mensaje),
+            new CalendarioControlador(
+                fn () => new GestionarCalendario($this->calendarioEditable(), $this->reloj()),
+                $autenticacion,
+            ),
+        );
+    }
+
+    /** Google Calendar con permiso de escritura (cuenta de servicio). No conecta hasta que se usa. */
+    private function calendarioEditable(): CalendarioGoogleEditable
+    {
+        return new CalendarioGoogleEditable(
+            $this->http,
+            new TokenCuentaServicio($this->http, $this->config->texto('GOOGLE_CUENTA_SERVICIO')),
+            $this->config->texto('GOOGLE_CALENDAR_ID'),
         );
     }
 

@@ -6,7 +6,6 @@ namespace CodeUrv\Infraestructura\Google;
 
 use CodeUrv\Aplicacion\Puertos\CalendarioEventos;
 use CodeUrv\Aplicacion\ServicioNoDisponible;
-use CodeUrv\Dominio\Evento;
 use CodeUrv\Infraestructura\Http\ClienteHttp;
 
 /** Eventos desde la API de Google Calendar (la API key nunca sale del servidor). */
@@ -39,21 +38,9 @@ final class CalendarioGoogle implements CalendarioEventos
             throw new ServicioNoDisponible("Google Calendar respondió {$estado}. {$detalle}");
         }
 
-        $eventos = [];
-        foreach ($datos['items'] ?? [] as $item) {
-            $inicio = $item['start']['dateTime'] ?? $item['start']['date'] ?? null;
-            if (!is_string($inicio)) {
-                continue;
-            }
-            $eventos[] = new Evento(
-                (string) ($item['id'] ?? ''),
-                (string) ($item['summary'] ?? '(Sin título)'),
-                (string) ($item['description'] ?? ''),
-                (string) ($item['location'] ?? ''),
-                $inicio,
-                !isset($item['start']['dateTime']),
-            );
-        }
-        return $eventos;
+        return array_values(array_filter(array_map(
+            static fn ($item) => is_array($item) ? EventoGoogle::desdeApi($item) : null,
+            $datos['items'] ?? [],
+        )));
     }
 }

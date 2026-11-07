@@ -32,3 +32,6 @@ dist-ssr
 /config.php
 /config.dev.php
 *.sqlite
+
+# Clave de la cuenta de servicio de Google (solo en el servidor)
+google-cuenta-servicio*.json

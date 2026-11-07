@@ -9,7 +9,7 @@ use CodeUrv\Dominio\Actividad;
 
 final class RepositorioActividadesPdo implements RepositorioActividades
 {
-    private const COLUMNAS = 'id, titulo, tipo, descripcion, informacion_extra, lugar, inicio, fin, ponente, plazas, publicada, inscripciones_abiertas';
+    private const COLUMNAS = 'id, titulo, tipo, descripcion, informacion_extra, lugar, inicio, fin, ponente, plazas, publicada, inscripciones_abiertas, en_calendario, evento_calendario_id';
 
     public function __construct(private readonly \PDO $pdo)
     {
@@ -43,6 +43,8 @@ final class RepositorioActividadesPdo implements RepositorioActividades
             'plazas' => $actividad->plazas,
             'publicada' => $actividad->publicada ? 1 : 0,
             'inscripciones_abiertas' => $actividad->inscripcionesAbiertas ? 1 : 0,
+            'en_calendario' => $actividad->enCalendario ? 1 : 0,
+            'evento_calendario_id' => $actividad->eventoCalendarioId,
         ];
 
         if ($actividad->id === null) {
@@ -84,6 +86,7 @@ final class RepositorioActividadesPdo implements RepositorioActividades
             'plazas' => $fila['plazas'] === null ? null : (int) $fila['plazas'],
             'publicada' => (bool) $fila['publicada'],
             'inscripcionesAbiertas' => (bool) $fila['inscripciones_abiertas'],
-        ], (int) $fila['id']);
+            'enCalendario' => (bool) $fila['en_calendario'],
+        ], (int) $fila['id'], $fila['evento_calendario_id'] === null ? null : (string) $fila['evento_calendario_id']);
     }
 }

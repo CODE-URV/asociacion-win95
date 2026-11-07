@@ -25,12 +25,14 @@ export default function GestorActividades() {
 
   const guardar = async (datos) => {
     if (vista.tipo === 'nueva') {
-      const nueva = await crear(datos);
+      const { actividad: nueva, aviso: avisoCalendario } = await crear(datos);
       setSeleccionadaId(nueva.id);
-      setAviso(`Actividad "${nueva.titulo}" creada${nueva.publicada ? ' y publicada' : ' (sin publicar)'}.`);
+      setAviso(avisoCalendario
+        ? `⚠️ ${avisoCalendario}`
+        : `Actividad "${nueva.titulo}" creada${nueva.publicada ? ' y publicada' : ' (sin publicar)'}${nueva.publicada && nueva.enCalendario ? ', y añadida al calendario' : ''}.`);
     } else {
-      const actualizada = await actualizar(vista.actividad.id, datos);
-      setAviso(`Actividad "${actualizada.titulo}" guardada.`);
+      const { actividad: actualizada, aviso: avisoCalendario } = await actualizar(vista.actividad.id, datos);
+      setAviso(avisoCalendario ? `⚠️ ${avisoCalendario}` : `Actividad "${actualizada.titulo}" guardada.`);
     }
     setVista(null);
   };
@@ -42,8 +44,8 @@ export default function GestorActividades() {
       : '';
     if (!window.confirm(`¿Eliminar "${seleccionada.titulo}"?${aviso} No se puede deshacer.`)) return;
     try {
-      await eliminar(seleccionada.id);
-      setAviso(`Actividad "${seleccionada.titulo}" eliminada.`);
+      const avisoCalendario = await eliminar(seleccionada.id);
+      setAviso(avisoCalendario ? `⚠️ ${avisoCalendario}` : `Actividad "${seleccionada.titulo}" eliminada.`);
       setSeleccionadaId(null);
     } catch (e) {
       setAviso(`No se ha podido eliminar: ${e.message}`);

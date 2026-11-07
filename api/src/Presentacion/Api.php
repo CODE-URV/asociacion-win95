@@ -8,6 +8,7 @@ use CodeUrv\Aplicacion\AccesoDenegado;
 use CodeUrv\Aplicacion\Conflicto;
 use CodeUrv\Aplicacion\CredencialesIncorrectas;
 use CodeUrv\Presentacion\Controladores\ActividadesControlador;
+use CodeUrv\Presentacion\Controladores\CalendarioControlador;
 use CodeUrv\Aplicacion\DemasiadosIntentos;
 use CodeUrv\Aplicacion\NoAutorizado;
 use CodeUrv\Aplicacion\ServicioNoDisponible;
@@ -33,6 +34,7 @@ final class Api
         PublicoControlador $publico,
         ActividadesControlador $actividades,
         private readonly \Closure $registrarError,
+        ?CalendarioControlador $calendario = null,
     ) {
         $this->router = (new Router())
             ->agregar('GET', '/proyectos', $proyectos->listar(...))
@@ -61,6 +63,15 @@ final class Api
             ->agregar('POST', '/admin/actividades/{id}/certificados', $actividades->enviarCertificados(...))
             ->agregar('POST', '/admin/actividades/{id}/inscripciones/{inscripcion}/certificado', $actividades->reenviarCertificado(...))
             ->agregar('GET', '/admin/actividades/{id}/certificado-previo', $actividades->vistaPreviaCertificado(...));
+
+        if ($calendario !== null) {
+            // Calendario de Google desde el Panel de control (admin)
+            $this->router
+                ->agregar('GET', '/admin/eventos', $calendario->listar(...))
+                ->agregar('POST', '/admin/eventos', $calendario->crear(...))
+                ->agregar('PUT', '/admin/eventos/{evento:texto}', $calendario->actualizar(...))
+                ->agregar('DELETE', '/admin/eventos/{evento:texto}', $calendario->eliminar(...));
+        }
     }
 
     public function atender(Peticion $peticion): Respuesta

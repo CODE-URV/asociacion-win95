@@ -23,21 +23,24 @@ export function useGestorActividades() {
     recargar();
   }, [recargar]);
 
+  /** Devuelven { actividad, aviso }: aviso si la actividad se guardó pero el calendario no se pudo actualizar. */
   const crear = async (datos) => {
-    const nueva = await api.crearActividad(datos);
+    const resultado = await api.crearActividad(datos);
     await recargar();
-    return nueva;
+    return resultado;
   };
 
   const actualizar = async (id, datos) => {
-    const actualizada = await api.actualizarActividad(id, datos);
+    const resultado = await api.actualizarActividad(id, datos);
     await recargar();
-    return actualizada;
+    return resultado;
   };
 
+  /** Devuelve el aviso (o null) si no se pudo quitar del calendario. */
   const eliminar = async (id) => {
-    await api.eliminarActividad(id);
+    const aviso = await api.eliminarActividad(id);
     setActividades((lista) => lista.filter((a) => a.id !== id));
+    return aviso;
   };
 
   return { actividades, cargando, error, recargar, crear, actualizar, eliminar };
