@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './SobreNosotros.css';
 import logoURV from '../../assets/code_urv_logo_nobg.png';
 
@@ -54,6 +54,7 @@ function SobreNosotros() {
   ];
 
   const totalImagenes = selectedFolder ? galeria[selectedFolder].length : 0;
+  const inicioDeslizar = useRef(null); // en móvil se cambia de foto deslizando
 
   const handlePrevImage = () => {
     setCurrentImgIndex(prev => Math.max(0, prev - 1));
@@ -170,7 +171,16 @@ function SobreNosotros() {
               <button className="modal-close" onClick={() => setSelectedFolder(null)}>✕</button>
             </div>
 
-            <div className="slider-container">
+            <div
+              className="slider-container"
+              onTouchStart={(e) => { inicioDeslizar.current = e.touches[0].clientX; }}
+              onTouchEnd={(e) => {
+                const distancia = e.changedTouches[0].clientX - (inicioDeslizar.current ?? 0);
+                if (distancia > 50) handlePrevImage();
+                if (distancia < -50) handleNextImage();
+                inicioDeslizar.current = null;
+              }}
+            >
               <img
                 src={galeria[selectedFolder][currentImgIndex].primary}
                 alt={`${selectedFolder} ${currentImgIndex + 1}`}

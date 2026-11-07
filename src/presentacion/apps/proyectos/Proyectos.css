@@ -352,3 +352,32 @@
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
 }
+/* ========== MÓVIL ========== */
+@media (max-width: 768px) {
+  .proyectos-tabs {
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    flex: 1 1 auto;
+    padding: 8px 8px;
+  }
+
+  /* Lista o detalle, nunca los dos a la vez */
+  .proyectos-sidebar {
+    width: 100%;
+  }
+
+  .proyectos-layout.con-detalle .proyectos-sidebar {
+    display: none;
+  }
+
+  .proyectos-details {
+    animation: none;
+  }
+
+  .close-details-btn {
+    min-width: 32px;
+    min-height: 32px;
+  }
+}

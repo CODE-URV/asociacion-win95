@@ -1,5 +1,6 @@
 import Desktop from './Desktop';
 import WindowManager from './WindowManager';
+import Taskbar from './Taskbar';
 import LoginDialog from './LoginDialog';
 import { useSesion } from '../../aplicacion/sesionContexto';
 import useGestorVentanas from '../../aplicacion/useGestorVentanas';
@@ -24,10 +25,12 @@ function Shell() {
     await cerrarSesion();
   };
 
+  // Orden de capas: escritorio < ventanas < barra de tareas y menú Inicio
   return (
     <div className="app-container">
-      <Desktop apps={apps} ventanas={ventanas} acciones={acciones} sesion={sesion} alCerrarSesion={alCerrarSesion} />
+      <Desktop apps={apps} acciones={acciones} />
       <WindowManager ventanas={ventanas} acciones={acciones} />
+      <Taskbar apps={apps} ventanas={ventanas} acciones={acciones} sesion={sesion} alCerrarSesion={alCerrarSesion} />
     </div>
   );
 }

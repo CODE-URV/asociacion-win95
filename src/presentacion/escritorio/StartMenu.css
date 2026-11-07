@@ -5,6 +5,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 999;
 }
 
@@ -123,4 +124,31 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+/* Móvil: menú más ancho y opciones más altas para el dedo */
+@media (max-width: 768px), (max-height: 500px) {
+  .start-menu {
+    width: min(300px, calc(100vw - 4px));
+    max-height: calc(100vh - 52px);
+    max-height: calc(100dvh - 52px);
+  }
+
+  .start-menu-content {
+    overflow-y: auto;
+  }
+
+  .start-menu-item {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .start-menu-item:hover {
+    background-color: transparent;
+    color: #000;
+  }
+
+  .start-menu-item:active {
+    background-color: #000080;
+    color: #fff;
+  }
 }

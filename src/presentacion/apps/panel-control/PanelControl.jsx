@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './PanelControl.css';
 import projectsIcon from '../../assets/desktop_icons/projects.png';
 import GestorProyectos from '../proyectos/GestorProyectos';
+import useModoTactil from '../../escritorio/useModoTactil';
 
 // Cada "applet" del Panel de control. Para añadir más, basta con otra entrada.
 const APPLETS = [
@@ -10,6 +11,7 @@ const APPLETS = [
 
 export default function PanelControl() {
   const [abierto, setAbierto] = useState(null);
+  const tactil = useModoTactil();
   const applet = APPLETS.find((a) => a.id === abierto);
 
   if (applet) {
@@ -31,13 +33,21 @@ export default function PanelControl() {
     <div className="pc">
       <div className="pc-iconos">
         {APPLETS.map((a) => (
-          <button key={a.id} className="pc-icono" onDoubleClick={() => setAbierto(a.id)} onKeyDown={(e) => e.key === 'Enter' && setAbierto(a.id)}>
+          <button
+            key={a.id}
+            className="pc-icono"
+            onClick={tactil ? () => setAbierto(a.id) : undefined}
+            onDoubleClick={tactil ? undefined : () => setAbierto(a.id)}
+            onKeyDown={(e) => e.key === 'Enter' && setAbierto(a.id)}
+          >
             <img src={a.imagen} alt="" />
             <span>{a.nombre}</span>
           </button>
         ))}
       </div>
-      <div className="pc-estado">{APPLETS.length} objeto(s) — haz doble clic para abrir</div>
+      <div className="pc-estado">
+        {APPLETS.length} objeto(s) — {tactil ? 'toca para abrir' : 'haz doble clic para abrir'}
+      </div>
     </div>
   );
 }

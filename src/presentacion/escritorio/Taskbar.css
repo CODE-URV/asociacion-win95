@@ -151,3 +151,24 @@
   border-bottom-color: #dfdfdf;
   background-color: #dfdfdf;
 }
+/* Móvil: los botones de ventanas se reparten el espacio en vez de desbordar */
+@media (max-width: 768px) {
+  .taskbar-windows {
+    padding: 0 2px;
+  }
+
+  .taskbar-window-btn {
+    min-width: 0;
+    flex: 0 1 140px;
+    height: 36px;
+  }
+
+  .start-button {
+    min-width: 0;
+    height: 36px;
+  }
+
+  .taskbar-separator {
+    display: none;
+  }
+}

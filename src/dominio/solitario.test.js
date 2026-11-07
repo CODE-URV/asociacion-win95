@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  crearPartida, desdeColumna, desdeDescarte, haGanado, hayMovimientos, moverAColumna, moverAFundacion, robar,
+  aColumna, aFundacion, crearPartida, desdeColumna, desdeDescarte, haGanado, hayMovimientos, mismoOrigen, mover,
+  moverAColumna, moverAFundacion, robar,
 } from './solitario';
 
 const carta = (lenguaje, rango, valor, bocaArriba = true) => ({ id: `${lenguaje}-${rango}`, lenguaje, rango, valor, bocaArriba });
@@ -52,6 +53,19 @@ describe('solitario', () => {
     expect(moverAColumna(p, desdeDescarte(), 0)).toBeNull();
     const k = { ...vacia(), descarte: [carta('C++', 'K', 13)] };
     expect(moverAColumna(k, desdeDescarte(), 0).columnas[0]).toHaveLength(1);
+  });
+
+  it('mover() acepta fundación o columna como destino (modo táctil)', () => {
+    const p = { ...vacia(), descarte: [carta('Java', 'A', 1)] };
+    expect(mover(p, desdeDescarte(), aFundacion(0)).fundaciones[0]).toHaveLength(1);
+    expect(mover(p, desdeDescarte(), aColumna(0))).toBeNull(); // un As no va a columna vacía
+  });
+
+  it('mismoOrigen compara tipo, columna y posición', () => {
+    expect(mismoOrigen(desdeColumna(2, 3), desdeColumna(2, 3))).toBe(true);
+    expect(mismoOrigen(desdeColumna(2, 3), desdeColumna(2, 4))).toBe(false);
+    expect(mismoOrigen(desdeDescarte(), desdeDescarte())).toBe(true);
+    expect(mismoOrigen(null, desdeDescarte())).toBe(false);
   });
 
   it('no modifica el estado original', () => {

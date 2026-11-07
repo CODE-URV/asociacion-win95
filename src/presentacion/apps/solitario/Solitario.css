@@ -277,3 +277,96 @@
 }
 
 img { pointer-events: none; -webkit-user-drag: none; }
+/* Carta elegida con un toque (modo táctil) */
+.card.seleccionada {
+  outline: 3px solid #ffeb3b;
+  outline-offset: -1px;
+  box-shadow: 0 0 0 2px #000, 0 6px 12px rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px);
+}
+
+/* ========================================
+   MÓVIL
+   ======================================== */
+@media (max-width: 768px), (max-height: 500px) {
+  .solitario-container {
+    padding: 6px;
+    --top-gap: 6px;
+    --controls-gap: 4px;
+  }
+
+  .solitario-header {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .solitario-stats {
+    gap: 12px;
+  }
+
+  .solitario-reset {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .solitario-board {
+    gap: 10px;
+  }
+
+  .solitario-foundations,
+  .solitario-tableaus {
+    gap: 4px;
+  }
+
+  .solitario-tableaus {
+    min-height: 0;
+  }
+
+  .solitario-pile,
+  .solitario-tableau {
+    border-radius: 4px;
+  }
+
+  .card {
+    border-width: 2px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .card-face {
+    padding: 2px;
+  }
+
+  .card-corner-top {
+    top: 1px;
+    left: 3px;
+  }
+
+  /* Con cartas pequeñas, la esquina de abajo solo estorba */
+  .card-corner-bottom {
+    display: none;
+  }
+
+  .card-empty {
+    font-size: 20px;
+  }
+
+  .victory-modal {
+    min-width: 0;
+    width: calc(100% - 32px);
+    max-width: 320px;
+  }
+}
+/* Móvil en horizontal: mazo, descarte y fundaciones en una sola fila */
+@media (max-height: 500px) {
+  .solitario-top {
+    flex-direction: row;
+  }
+
+  .solitario-foundations {
+    margin-left: auto;
+  }
+}

@@ -58,3 +58,18 @@
   font-weight: bold;
   background: linear-gradient(90deg, #000080, #1084d0);
 }
+
+/* Móvil: los campos de texto a 16px para que el iPhone no haga zoom al tocarlos */
+@media (max-width: 768px), (max-height: 500px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .win95-boton {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}

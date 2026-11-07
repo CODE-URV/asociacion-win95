@@ -49,7 +49,7 @@ function Proyectos() {
                 ))}
             </div>
 
-            <div className="proyectos-layout">
+            <div className={`proyectos-layout ${seleccionado ? 'con-detalle' : ''}`}>
                 <div className={`proyectos-sidebar ${!seleccionado ? 'full-width' : ''}`}>
                     <div className="proyectos-list-header">
                         📋 Lista de Proyectos ({proyectosFiltrados.length})

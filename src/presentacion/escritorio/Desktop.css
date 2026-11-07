@@ -4,6 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background-color: #008080;
   overflow: hidden;
   user-select: none;
@@ -79,7 +80,74 @@
   word-wrap: break-word;
 }
 .desktop-icon-emoji {
-  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  font-size: 40px;
   line-height: 1;
+}
+
+.desktop-logo img {
+  max-width: 80vw;
+}
+
+/* Móvil: iconos en cuadrícula como en la pantalla de inicio de un teléfono */
+@media (max-width: 768px) {
+  .desktop-icons {
+    right: 8px;
+    left: 8px;
+    top: 12px;
+    gap: 16px 4px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    justify-items: center;
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  .desktop-icon {
+    width: 84px;
+    padding: 6px 2px;
+  }
+
+  .desktop-icon:hover {
+    background-color: transparent;
+  }
+
+  .desktop-icon:active {
+    background-color: rgba(0, 0, 128, 0.25);
+  }
+
+  .desktop-logo img {
+    width: 260px;
+  }
+}
+
+/* Móvil en horizontal: poca altura, iconos más pequeños en filas */
+@media (max-height: 500px) {
+  .desktop-icons {
+    right: 8px;
+    gap: 8px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  .desktop-icon-image img,
+  .desktop-icon-emoji {
+    width: 44px;
+    height: 44px;
+  }
+
+  .desktop-logo img {
+    width: 200px;
+  }
 }
 

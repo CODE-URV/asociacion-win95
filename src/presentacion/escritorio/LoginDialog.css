@@ -60,6 +60,7 @@
 .login-fila .win95-input {
   width: 100%;
   min-width: 0;
+  text-align: left; /* Eventos.css también define .win95-input (centrado) */
 }
 
 .login-pista {

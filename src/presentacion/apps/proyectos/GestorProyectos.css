@@ -114,6 +114,33 @@
   .gp-fila {
     grid-template-columns: 1fr;
   }
+
+  /* Los 4 botones en una sola fila */
+  .gp-barra .win95-boton {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 6px 2px;
+    font-size: 12px;
+  }
+
+  /* En el móvil sobra la columna Responsable (se ve al editar) */
+  .gp-tabla th:nth-child(4),
+  .gp-tabla td:nth-child(4) {
+    display: none;
+  }
+
+  .gp-tabla td {
+    padding: 8px 6px;
+    max-width: 160px;
+  }
+
+  .gp-formulario {
+    padding: 8px;
+  }
+
+  .gp-botones .win95-boton {
+    flex: 1;
+  }
 }
 
 .gp-campo {

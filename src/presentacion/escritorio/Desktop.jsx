@@ -1,9 +1,9 @@
 import DesktopIcon from './DesktopIcon';
-import Taskbar from './Taskbar';
 import './Desktop.css';
 import logoURV from '../assets/code_urv_logo_desktop.png';
 
-function Desktop({ apps, ventanas, acciones, sesion, alCerrarSesion }) {
+/** Fondo del escritorio con el logo y los iconos de las aplicaciones. */
+function Desktop({ apps, acciones }) {
   return (
     <div className="desktop">
       <div className="desktop-logo">
@@ -23,14 +23,6 @@ function Desktop({ apps, ventanas, acciones, sesion, alCerrarSesion }) {
             />
           ))}
       </div>
-
-      <Taskbar
-        apps={apps}
-        ventanas={ventanas}
-        acciones={acciones}
-        sesion={sesion}
-        alCerrarSesion={alCerrarSesion}
-      />
     </div>
   );
 }

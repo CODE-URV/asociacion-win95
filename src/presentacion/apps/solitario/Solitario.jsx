@@ -4,9 +4,10 @@ import javaLogo from '../../assets/java-logo.png';
 import pythonLogo from '../../assets/python-logo.png';
 import jsLogo from '../../assets/javascript-logo.png';
 import cppLogo from '../../assets/cpp-logo.png';
-import { LENGUAJES, desdeColumna, desdeDescarte } from '../../../dominio/solitario';
+import { LENGUAJES, aColumna, aFundacion, desdeColumna, desdeDescarte } from '../../../dominio/solitario';
 import useSolitario from '../../../aplicacion/useSolitario';
-import useTamanoCartas from './useTamanoCartas';
+import useTamanoCartas, { SOLAPE } from './useTamanoCartas';
+import useModoTactil from '../../escritorio/useModoTactil';
 
 const ESTILO_LENGUAJE = {
     'Java': { color: '#FF6B35', logo: javaLogo },
@@ -40,7 +41,7 @@ function DorsoCarta() {
 
 /** Imagen que se ve al arrastrar varias cartas de una columna. */
 function crearImagenArrastre(cartas, { width, height }) {
-    const separacion = Math.round(height * 0.22);
+    const separacion = Math.round(height * SOLAPE);
     const contenedor = document.createElement('div');
     Object.assign(contenedor.style, {
         position: 'absolute', top: '-9999px', left: '-9999px', pointerEvents: 'none',
@@ -107,7 +108,18 @@ function FinDePartida({ resultado, movimientos, tiempo, alReiniciar }) {
 function Solitario() {
     const juego = useSolitario();
     const { contenedorRef, tamano } = useTamanoCartas();
+    const tactil = useModoTactil(); // en móvil: tocar carta y tocar destino (arrastrar no funciona con el dedo)
     const { mazo, descarte, fundaciones, columnas, movimientos } = juego.partida;
+    const { seleccion } = juego;
+
+    const descarteSeleccionado = seleccion?.tipo === 'descarte';
+    const columnaSeleccionada = (indice, posicion) =>
+        seleccion?.tipo === 'columna' && seleccion.indice === indice && posicion >= seleccion.posicion;
+
+    const alTocarCarta = (origen) => (e) => {
+        e.stopPropagation();
+        juego.tocarCarta(origen);
+    };
 
     const permitirSoltar = (e) => {
         e.preventDefault();
@@ -176,7 +188,7 @@ function Solitario() {
                             return (
                                 <div
                                     key={carta.id}
-                                    className="card card-face card-in-waste"
+                                    className={`card card-face card-in-waste ${esLaDeArriba && descarteSeleccionado ? 'seleccionada' : ''}`}
                                     data-language={carta.lenguaje}
                                     style={{
                                         borderColor: colorDe(carta.lenguaje),
@@ -184,9 +196,10 @@ function Solitario() {
                                         zIndex: i,
                                         pointerEvents: esLaDeArriba ? 'auto' : 'none',
                                     }}
-                                    draggable={esLaDeArriba}
+                                    draggable={!tactil && esLaDeArriba}
                                     onDragStart={(e) => esLaDeArriba && empezarArrastre(e, desdeDescarte())}
-                                    onDoubleClick={() => esLaDeArriba && juego.moverAutomatico(desdeDescarte())}
+                                    onDoubleClick={tactil ? undefined : () => esLaDeArriba && juego.moverAutomatico(desdeDescarte())}
+                                    onClick={tactil && esLaDeArriba ? alTocarCarta(desdeDescarte()) : undefined}
                                 >
                                     <CaraCarta carta={carta} />
                                 </div>
@@ -202,6 +215,7 @@ function Solitario() {
                                 <div
                                     key={LENGUAJES[i]}
                                     className="solitario-pile"
+                                    onClick={tactil ? () => juego.tocarDestino(aFundacion(i)) : undefined}
                                     onDragOver={permitirSoltar}
                                     onDragEnter={resaltar}
                                     onDragLeave={quitarResaltado}
@@ -232,6 +246,7 @@ function Solitario() {
                         <div
                             key={indice}
                             className="solitario-tableau"
+                            onClick={tactil ? () => juego.tocarDestino(aColumna(indice)) : undefined}
                             onDragOver={permitirSoltar}
                             onDragEnter={resaltar}
                             onDragLeave={quitarResaltado}
@@ -247,21 +262,22 @@ function Solitario() {
                                 columna.map((carta, posicion) => (
                                     <div
                                         key={carta.id}
-                                        className={`card card-in-tableau ${carta.bocaArriba ? 'card-face' : 'card-back'}`}
+                                        className={`card card-in-tableau ${carta.bocaArriba ? 'card-face' : 'card-back'} ${columnaSeleccionada(indice, posicion) ? 'seleccionada' : ''}`}
                                         data-language={carta.lenguaje}
                                         style={{
                                             borderColor: carta.bocaArriba ? colorDe(carta.lenguaje) : '#000',
-                                            top: `${Math.round(posicion * tamano.height * 0.22)}px`,
+                                            top: `${Math.round(posicion * tamano.height * SOLAPE)}px`,
                                             zIndex: posicion,
                                             cursor: carta.bocaArriba ? 'grab' : 'default',
                                             pointerEvents: carta.bocaArriba ? 'auto' : 'none',
                                         }}
-                                        draggable={carta.bocaArriba}
+                                        draggable={!tactil && carta.bocaArriba}
                                         onDragStart={(e) =>
                                             carta.bocaArriba &&
                                             empezarArrastre(e, desdeColumna(indice, posicion), columna.slice(posicion))
                                         }
-                                        onDoubleClick={() => carta.bocaArriba && juego.moverAutomatico(desdeColumna(indice, posicion))}
+                                        onDoubleClick={tactil ? undefined : () => carta.bocaArriba && juego.moverAutomatico(desdeColumna(indice, posicion))}
+                                        onClick={tactil && carta.bocaArriba ? alTocarCarta(desdeColumna(indice, posicion)) : undefined}
                                     >
                                         {carta.bocaArriba ? <CaraCarta carta={carta} /> : <DorsoCarta />}
                                     </div>

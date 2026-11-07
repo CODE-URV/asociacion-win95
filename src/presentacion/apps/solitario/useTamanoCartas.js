@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 
 const COLUMNAS = 7;
-const SEPARACION = 12; // igual que el gap de .solitario-tableaus
-const PADDING_HORIZONTAL = 32; // padding izquierdo + derecho de .solitario-container
-const ANCHO_MIN = 48;
+const ANCHO_MIN = 30;
 const ANCHO_MAX = 110;
 const PROPORCION = 130 / 90; // alto / ancho
+export const SOLAPE = 0.22; // parte visible de cada carta tapada en una columna (respecto a su alto)
 
 /**
  * Calcula el tamaño de carta según el ancho del tablero y lo expone como
  * variables CSS (--card-width, ...) y como valores para los desplazamientos en JS.
+ * Los márgenes y separaciones se leen del propio CSS, que cambia en móvil.
  */
 export default function useTamanoCartas() {
   const contenedorRef = useRef(null);
@@ -20,8 +20,25 @@ export default function useTamanoCartas() {
     if (!contenedor) return undefined;
 
     const actualizar = () => {
-      const disponible = Math.max(0, contenedor.clientWidth - PADDING_HORIZONTAL - (COLUMNAS - 1) * SEPARACION);
-      const ancho = Math.max(ANCHO_MIN, Math.min(ANCHO_MAX, Math.floor(disponible / COLUMNAS)));
+      const estilo = getComputedStyle(contenedor);
+      const padding = parseFloat(estilo.paddingLeft) + parseFloat(estilo.paddingRight);
+      const columnas = contenedor.querySelector('.solitario-tableaus');
+      const separacion = columnas ? parseFloat(getComputedStyle(columnas).columnGap) || 0 : 12;
+
+      // Límite por ancho: que quepan las 7 columnas
+      const disponible = Math.max(0, contenedor.clientWidth - padding - (COLUMNAS - 1) * separacion);
+      const anchoPorAncho = Math.floor(disponible / COLUMNAS);
+
+      // Límite por alto: zona superior (1 o 2 filas de cartas) + una columna con ~6 cartas solapadas
+      const cabecera = contenedor.querySelector('.solitario-header');
+      const altoCabecera = cabecera ? cabecera.offsetHeight + parseFloat(getComputedStyle(cabecera).marginBottom) : 0;
+      const superior = contenedor.querySelector('.solitario-top');
+      const filasSuperiores = superior && getComputedStyle(superior).flexDirection === 'row' ? 1 : 2;
+      const altoDisponible = contenedor.clientHeight - parseFloat(estilo.paddingTop) - parseFloat(estilo.paddingBottom)
+        - altoCabecera - 3 * separacion;
+      const anchoPorAlto = Math.floor(altoDisponible / (filasSuperiores + 1 + 6 * SOLAPE) / PROPORCION);
+
+      const ancho = Math.max(ANCHO_MIN, Math.min(ANCHO_MAX, anchoPorAncho, anchoPorAlto));
       const alto = Math.round(ancho * PROPORCION);
 
       contenedor.style.setProperty('--card-width', `${ancho}px`);

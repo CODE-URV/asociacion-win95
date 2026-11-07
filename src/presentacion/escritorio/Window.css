@@ -237,27 +237,58 @@
   top: 0 !important;
   width: 100vw !important;
   height: calc(100vh - 48px) !important;
+  height: calc(100dvh - 48px) !important;
 }
 
-/* Acomplamos para movil */
-@media (max-width: 768px) {
+/* Móvil (y móvil en horizontal): cada ventana ocupa toda la pantalla.
+   Debe coincidir con useModoTactil.js */
+@media (max-width: 768px), (max-height: 500px) {
   .window {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    
-    height: calc(100vh - 48px) !important; 
-    
+    height: calc(100vh - 48px) !important;
+    height: calc(100dvh - 48px) !important;
+    min-width: 0;
+    min-height: 0;
     border: none !important;
     box-shadow: none !important;
+  }
+
+  /* Barra de título y botones con tamaño para el dedo */
+  .window-title-bar {
+    height: 34px;
+    cursor: default;
+  }
+
+  .window-title {
+    font-size: 14px;
+    min-width: 0;
+  }
+
+  .window-title-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .window-btn {
+    width: 30px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .window-content {
+    padding: 2px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .resize-handle {
     display: none !important;
   }
 
-  /* ocultar lo de hacer pantalla pequeña */
+  /* Maximizar no tiene sentido si ya ocupa toda la pantalla */
   .window-maximize-btn {
     display: none !important;
   }

@@ -141,6 +141,21 @@ export function moverAColumna(estado, origen, indiceDestino) {
   };
 }
 
+// Destinos de un movimiento
+export const aFundacion = (indice) => ({ tipo: 'fundacion', indice });
+export const aColumna = (indice) => ({ tipo: 'columna', indice });
+
+/** Mueve desde un origen a un destino (fundación o columna). null si no es válido. */
+export function mover(estado, origen, destino) {
+  return destino.tipo === 'fundacion'
+    ? moverAFundacion(estado, origen, destino.indice)
+    : moverAColumna(estado, origen, destino.indice);
+}
+
+export function mismoOrigen(a, b) {
+  return Boolean(a && b) && a.tipo === b.tipo && a.indice === b.indice && a.posicion === b.posicion;
+}
+
 /** Doble clic: manda la carta a su fundación si se puede. */
 export function moverAutomatico(estado, origen) {
   const cartas = cartasDelOrigen(estado, origen);
