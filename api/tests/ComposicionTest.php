@@ -57,4 +57,15 @@ return [
         });
         @unlink($sqlite);
     },
+
+    'con cuenta de servicio, Eventos se monta con ella (502 si Google falla, nunca 500)' => static function () use ($conConfig) {
+        $cuenta = tempnam(sys_get_temp_dir(), 'cuenta');
+        file_put_contents($cuenta, '{"no": "es una cuenta válida"}');
+        $conConfig(['GOOGLE_CUENTA_SERVICIO' => $cuenta, 'GOOGLE_CALENDAR_ID' => 'x@group.calendar.google.com'], static function (Config $config) {
+            $api = (new Contenedor($config, new SesionEnMemoria()))->api();
+            $r = $api->atender(new Peticion('GET', '/eventos', ['desde' => '2026-11-01', 'hasta' => '2026-11-30']));
+            igual(502, $r->estado);
+        });
+        @unlink($cuenta);
+    },
 ];

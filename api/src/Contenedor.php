@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CodeUrv;
 
 use CodeUrv\Aplicacion\CasosDeUso\Autenticacion;
+use CodeUrv\Aplicacion\Puertos\CalendarioEventos;
 use CodeUrv\Aplicacion\CasosDeUso\ConsultarEventos;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarInscripcion;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarCertificados;
