@@ -24,9 +24,14 @@ export function encajarEnPantalla({ x, y, width, height }, pantalla) {
  * Abre la aplicación indicada. Si ya estaba abierta, la restaura y la trae al frente.
  * `app` viene del registro de aplicaciones (id, titulo, icono, tamano, centrada).
  */
-export function abrirVentana(ventanas, app, pantalla, secuencia) {
+export function abrirVentana(ventanas, app, pantalla, secuencia, parametros = null) {
   const existente = ventanas.find((v) => v.appId === app.id);
-  if (existente) return traerAlFrente(ventanas, existente.id, { restaurar: true });
+  if (existente) {
+    const conParametros = parametros
+      ? ventanas.map((v) => (v.id === existente.id ? { ...v, parametros } : v))
+      : ventanas;
+    return traerAlFrente(conParametros, existente.id, { restaurar: true });
+  }
 
   const { ancho = 650, alto = 450 } = app.tamano ?? {};
   const desplazamiento = (secuencia * 30) % 200;
@@ -47,6 +52,7 @@ export function abrirVentana(ventanas, app, pantalla, secuencia) {
       minimized: false,
       maximized: false,
       zIndex: zMaximo(ventanas) + 1,
+      parametros, // datos para el contenido (p. ej. la actividad del QR escaneado)
     },
   ];
 }

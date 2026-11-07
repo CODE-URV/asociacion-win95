@@ -9,6 +9,7 @@ declare(strict_types=1);
 $carpetaPrivada = dirname(__DIR__, 2);
 
 // Los errores nunca se muestran al visitante: van a api-errores.log, fuera de public_html
+date_default_timezone_set('Europe/Madrid'); // las actividades se guardan en hora local
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 if (getenv('CODEURV_CONFIG') === false && is_writable($carpetaPrivada)) {

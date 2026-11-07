@@ -7,7 +7,13 @@ namespace CodeUrv;
 use CodeUrv\Aplicacion\CasosDeUso\Autenticacion;
 use CodeUrv\Aplicacion\CasosDeUso\ConsultarEventos;
 use CodeUrv\Aplicacion\CasosDeUso\EnviarInscripcion;
+use CodeUrv\Aplicacion\CasosDeUso\GestionarActividades;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarProyectos;
+use CodeUrv\Aplicacion\CasosDeUso\ParticiparEnActividades;
+use CodeUrv\Infraestructura\BaseDeDatos\AjustesPdo;
+use CodeUrv\Infraestructura\BaseDeDatos\RepositorioActividadesPdo;
+use CodeUrv\Infraestructura\BaseDeDatos\RepositorioInscripcionesPdo;
+use CodeUrv\Presentacion\Controladores\ActividadesControlador;
 use CodeUrv\Aplicacion\Puertos\Sesion;
 use CodeUrv\Infraestructura\BaseDeDatos\ConexionPdo;
 use CodeUrv\Infraestructura\BaseDeDatos\RegistroIntentosPdo;
@@ -63,8 +69,41 @@ final class Contenedor
                     $this->config->obligatorio('WEB_APP_URL'),
                 )),
             ),
+            new ActividadesControlador(
+                fn () => new ParticiparEnActividades(
+                    new RepositorioActividadesPdo($this->pdo()),
+                    new RepositorioInscripcionesPdo($this->pdo()),
+                    new AjustesPdo($this->pdo()),
+                    $this->reloj(),
+                    self::generarCodigoCertificado(...),
+                ),
+                fn () => new GestionarActividades(
+                    new RepositorioActividadesPdo($this->pdo()),
+                    new RepositorioInscripcionesPdo($this->pdo()),
+                    new AjustesPdo($this->pdo()),
+                    $this->reloj(),
+                ),
+                $autenticacion,
+            ),
             static fn (string $mensaje) => error_log('[codeurv-api] ' . $mensaje),
         );
+    }
+
+    /** @return \Closure(): \DateTimeImmutable */
+    private function reloj(): \Closure
+    {
+        return static fn (): \DateTimeImmutable => new \DateTimeImmutable('now', new \DateTimeZone('Europe/Madrid'));
+    }
+
+    /** Código público del certificado: 12 caracteres sin letras confusas (0/O, 1/I...). */
+    private static function generarCodigoCertificado(): string
+    {
+        $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        $codigo = '';
+        for ($i = 0; $i < 12; $i++) {
+            $codigo .= $alfabeto[random_int(0, strlen($alfabeto) - 1)];
+        }
+        return $codigo;
     }
 
     private function pdo(): \PDO

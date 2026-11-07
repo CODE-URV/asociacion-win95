@@ -27,15 +27,20 @@ import Contacto from './contacto/Contacto';
 import Solitario from './solitario/Solitario';
 import PanelControl from './panel-control/PanelControl';
 import AcercaDe from './acerca/AcercaDe';
+import Actividades from './actividades/Actividades';
+import Asistencia from './actividades/Asistencia';
 
 export const APPS = [
   { id: 'about', titulo: 'Quién somos', icono: '💻', imagen: aboutUsIcon, componente: SobreNosotros, tamano: { ancho: 700, alto: 550 }, escritorio: true, menu: 'principal' },
   { id: 'events', titulo: 'Eventos', icono: '📅', imagen: eventsIcon, componente: Eventos, escritorio: true, menu: 'principal' },
+  { id: 'actividades', titulo: 'Charlas y talleres', icono: '🎤', componente: Actividades, tamano: { ancho: 720, alto: 580 }, escritorio: true, menu: 'principal' },
   { id: 'projects', titulo: 'Proyectos', icono: '🚀', imagen: projectsIcon, componente: Proyectos, escritorio: true, menu: 'principal' },
   { id: 'inscriptions', titulo: 'Hazte socio', icono: '📝', imagen: sociosIcon, componente: Inscripciones, escritorio: true, menu: 'principal' },
   { id: 'contact', titulo: 'Contacto', icono: '📧', imagen: contactIcon, componente: Contacto, escritorio: true, menu: 'principal' },
   { id: 'solitario', titulo: 'Solitario', icono: '🃏', imagen: gameIcon, componente: Solitario, tamano: { ancho: 800, alto: 600 }, escritorio: true, menu: 'juegos' },
   { id: 'panel-control', titulo: 'Panel de control', icono: '🛠️', componente: PanelControl, tamano: { ancho: 720, alto: 520 }, escritorio: true, menu: 'sistema', soloAdmin: true },
+  // Se abre al escanear el QR de una actividad (no tiene icono)
+  { id: 'asistencia', titulo: 'Registrar asistencia', icono: '✅', componente: Asistencia, tamano: { ancho: 480, alto: 600 }, centrada: true, escritorio: false, menu: null },
   { id: 'config', titulo: 'Acerca de CODE URV', icono: '⚙️', componente: AcercaDe, tamano: { ancho: 450, alto: 550 }, centrada: true, escritorio: false, menu: 'sistema' },
 ];
 

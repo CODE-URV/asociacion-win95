@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Desktop from './Desktop';
 import WindowManager from './WindowManager';
 import Taskbar from './Taskbar';
@@ -5,12 +6,22 @@ import LoginDialog from './LoginDialog';
 import { useSesion } from '../../aplicacion/sesionContexto';
 import useGestorVentanas from '../../aplicacion/useGestorVentanas';
 import { puedeUsarApp } from '../../dominio/sesion';
-import { APPS, appsSoloAdmin } from '../apps/registro';
+import { leerUrlAsistencia } from '../../dominio/actividad';
+import { APPS, appPorId, appsSoloAdmin } from '../apps/registro';
 
 /** El "sistema operativo": inicio de sesión, escritorio, ventanas y barra de tareas. */
 function Shell() {
   const { cargando, sesion, mostrarLogin, entrarComoInvitado, iniciarSesion, cerrarSesion } = useSesion();
-  const { ventanas, ...acciones } = useGestorVentanas();
+
+  // Al escanear el QR de una actividad se llega con ?asistencia=ID&codigo=XXX:
+  // se abre directamente la ventana para registrar la asistencia.
+  const [qr] = useState(() => leerUrlAsistencia(window.location.search));
+  const { ventanas, ...acciones } = useGestorVentanas(qr ? { app: appPorId('asistencia'), parametros: qr } : null);
+
+  useEffect(() => {
+    // Quitar los parámetros para que al recargar no se repita
+    if (qr) window.history.replaceState(null, '', window.location.pathname);
+  }, [qr]);
 
   if (cargando) return <div className="login-fondo" />;
 

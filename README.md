@@ -70,6 +70,23 @@ api/
 | GET | `/api/eventos?desde=ISO&hasta=ISO` | público |
 | POST | `/api/inscripciones` | público |
 | GET / POST / DELETE | `/api/sesion` | consultar / iniciar / cerrar sesión |
+| GET | `/api/actividades` | público: charlas y talleres publicados |
+| POST | `/api/actividades/{id}/inscripciones` | público: apuntarse |
+| POST | `/api/actividades/{id}/pase` | público: cambia el código del QR por un pase de 15 min |
+| POST | `/api/actividades/{id}/asistencia` | público: registrar asistencia con el pase |
+| GET / POST / PUT / DELETE | `/api/admin/actividades[/{id}]` | admin + CSRF |
+| GET / PUT / DELETE | `/api/admin/actividades/{id}/inscripciones[/{id}]` | admin: inscritos y asistencia manual |
+| GET | `/api/admin/actividades/{id}/qr` | admin: código actual para el proyector |
+
+### Charlas y talleres: asistencia con QR
+
+1. El admin crea la actividad en **Panel de control → Actividades** y la publica.
+2. La gente se apunta desde la ventana **Charlas y talleres**.
+3. El día de la actividad, el admin pulsa **QR** y lo proyecta. El código cambia cada 30 s
+   (HMAC con un secreto que se genera solo en la tabla `ajustes`), así que una foto deja de servir en ~1 minuto.
+4. Al escanearlo se abre `codeurv.com/?asistencia=ID&codigo=XXX`: la web cambia el código por un pase de 15 min
+   y pide el correo. Si no estaba inscrito, pide sus datos y le inscribe en el momento.
+5. Solo funciona desde 30 min antes del inicio hasta 1 h después del final.
 
 Seguridad: contraseña con `password_hash`, cookie de sesión `httpOnly` + `SameSite=Strict` + `Secure` limitada a `/api`, token CSRF en las peticiones de admin, bloqueo de 15 min tras 5 intentos fallidos (por IP y por usuario) y errores internos solo en el log.
 
@@ -109,6 +126,7 @@ Configuración única en Hostinger:
 
 1. **PHP 8.5:** hPanel → Avanzado → Configuración de PHP.
 2. **Base de datos:** hPanel → Bases de datos → crear una base MySQL y su usuario. En phpMyAdmin, pestaña SQL, ejecuta `api/sql/mysql.sql`.
+   Si la base ya existía, ejecuta solo las migraciones nuevas de `api/sql/migraciones/` (p. ej. `002-actividades.sql`).
 3. **Administrador:** `php api/herramientas/crear-admin.php <usuario>` imprime el SQL que hay que ejecutar en phpMyAdmin.
 4. **`config.php`:** cópialo de `api/config.example.php` en `/home/uXXXX/domains/codeurv.com/` (al lado de `public_html`, **no dentro**) y rellénalo.
 5. **FTP:** cuenta FTP con directorio `/public_html` y, en GitHub, los secrets `FTP_SERVER` (solo la IP), `FTP_USERNAME` y `FTP_PASSWORD`.

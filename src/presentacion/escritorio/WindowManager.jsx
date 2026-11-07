@@ -21,7 +21,7 @@ function WindowManager({ ventanas, acciones }) {
               alRedimensionar={acciones.redimensionar}
               alMaximizar={acciones.maximizar}
             >
-              {Contenido ? <Contenido cerrarVentana={() => acciones.cerrar(ventana.id)} /> : null}
+              {Contenido ? <Contenido {...ventana.parametros} cerrarVentana={() => acciones.cerrar(ventana.id)} /> : null}
             </Window>
           );
         })}

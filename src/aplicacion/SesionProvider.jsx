@@ -2,11 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SesionContexto } from './sesionContexto';
 import { SESION_INVITADO, crearSesionAdmin } from '../dominio/sesion';
 import * as sesionApi from '../infraestructura/sesionApi';
+import { leerUrlAsistencia } from '../dominio/actividad';
 
 export default function SesionProvider({ children }) {
   const [cargando, setCargando] = useState(true);
   const [sesion, setSesion] = useState(null);
   const [mostrarLogin, setMostrarLogin] = useState(false);
+  // Quien llega escaneando el QR de una actividad va directo a registrar su asistencia
+  const [vieneDeQr] = useState(() => leerUrlAsistencia(window.location.search) !== null);
 
   // Al arrancar: si hay sesión de admin en el servidor se entra directamente;
   // si no, se pide inicio de sesión solo la primera vez en este navegador.
@@ -19,7 +22,7 @@ export default function SesionProvider({ children }) {
         if (cancelado) return;
         if (usuario) {
           setSesion(crearSesionAdmin(usuario.nombre));
-        } else if (sesionApi.loginYaVisto()) {
+        } else if (vieneDeQr || sesionApi.loginYaVisto()) {
           setSesion(SESION_INVITADO);
         } else {
           setMostrarLogin(true);
@@ -29,7 +32,7 @@ export default function SesionProvider({ children }) {
     return () => {
       cancelado = true;
     };
-  }, []);
+  }, [vieneDeQr]);
 
   const entrarComoInvitado = useCallback(() => {
     sesionApi.marcarLoginVisto();

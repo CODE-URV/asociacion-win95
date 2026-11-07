@@ -8,7 +8,7 @@ function reductor(estado, accion) {
     case 'abrir':
       return {
         secuencia: estado.secuencia + 1,
-        lista: ventanas.abrirVentana(estado.lista, accion.app, accion.pantalla, estado.secuencia),
+        lista: ventanas.abrirVentana(estado.lista, accion.app, accion.pantalla, estado.secuencia, accion.parametros),
       };
     case 'cerrar':
       return { ...estado, lista: ventanas.cerrarVentana(estado.lista, accion.id) };
@@ -31,13 +31,20 @@ function reductor(estado, accion) {
   }
 }
 
-/** Estado y acciones de las ventanas abiertas en el escritorio. */
-export default function useGestorVentanas() {
-  const [estado, despachar] = useReducer(reductor, { secuencia: 0, lista: [] });
+/**
+ * Estado y acciones de las ventanas abiertas en el escritorio.
+ * `abrirAlEmpezar` ({ app, parametros }) abre una ventana desde el principio (p. ej. al escanear un QR).
+ */
+export default function useGestorVentanas(abrirAlEmpezar = null) {
+  const [estado, despachar] = useReducer(reductor, abrirAlEmpezar, (inicial) =>
+    inicial
+      ? reductor({ secuencia: 0, lista: [] }, { tipo: 'abrir', ...inicial, pantalla: pantallaActual() })
+      : { secuencia: 0, lista: [] }
+  );
 
   const acciones = useMemo(
     () => ({
-      abrir: (app) => despachar({ tipo: 'abrir', app, pantalla: pantallaActual() }),
+      abrir: (app, parametros = null) => despachar({ tipo: 'abrir', app, pantalla: pantallaActual(), parametros }),
       cerrar: (id) => despachar({ tipo: 'cerrar', id }),
       cerrarApps: (appIds) => despachar({ tipo: 'cerrarApps', appIds }),
       minimizar: (id) => despachar({ tipo: 'minimizar', id }),

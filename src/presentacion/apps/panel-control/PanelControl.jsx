@@ -2,10 +2,12 @@ import { useState } from 'react';
 import './PanelControl.css';
 import projectsIcon from '../../assets/desktop_icons/projects.png';
 import GestorProyectos from '../proyectos/GestorProyectos';
+import GestorActividades from '../actividades/GestorActividades';
 import useModoTactil from '../../escritorio/useModoTactil';
 
 // Cada "applet" del Panel de control. Para añadir más, basta con otra entrada.
 const APPLETS = [
+  { id: 'actividades', nombre: 'Actividades', icono: '🎤', componente: GestorActividades },
   { id: 'proyectos', nombre: 'Proyectos', imagen: projectsIcon, componente: GestorProyectos },
 ];
 
@@ -40,7 +42,7 @@ export default function PanelControl() {
             onDoubleClick={tactil ? undefined : () => setAbierto(a.id)}
             onKeyDown={(e) => e.key === 'Enter' && setAbierto(a.id)}
           >
-            <img src={a.imagen} alt="" />
+            {a.imagen ? <img src={a.imagen} alt="" /> : <span className="pc-icono-emoji">{a.icono}</span>}
             <span>{a.nombre}</span>
           </button>
         ))}

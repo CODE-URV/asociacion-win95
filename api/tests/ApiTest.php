@@ -23,6 +23,7 @@ use CodeUrv\Tests\UsuariosEnMemoria;
 
 use function CodeUrv\Tests\afirmar;
 use function CodeUrv\Tests\igual;
+use function CodeUrv\Tests\montarActividades;
 use function CodeUrv\Tests\pdoSqlite;
 
 /** Monta la API completa con dobles en memoria y devuelve [atender(), estado compartido]. */
@@ -64,6 +65,7 @@ $montar = static function (bool $googleCaido = false): array {
             static fn () => new ConsultarEventos($calendario),
             static fn () => new EnviarInscripcion($receptor),
         ),
+        montarActividades($pdo, $auth, static fn () => new \DateTimeImmutable()),
         static function (string $m) use ($errores) { $errores[] = $m; },
     );
 

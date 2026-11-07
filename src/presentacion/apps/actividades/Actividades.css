@@ -1,0 +1,304 @@
+/* Actividades (charlas y talleres) y registro de asistencia — estilo Windows 95 */
+
+.act {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+  background: #c0c0c0;
+}
+
+.act-cabecera {
+  padding: 6px 10px;
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  flex-shrink: 0;
+}
+
+.act-mensaje {
+  padding: 24px 12px;
+  text-align: center;
+}
+
+.act-lista,
+.act-detalle {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.act-separador {
+  margin-top: 8px;
+  padding-bottom: 2px;
+  font-weight: bold;
+  color: #404040;
+  border-bottom: 1px solid #808080;
+}
+
+/* Tarjetas de la lista */
+.act-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 12px;
+  color: #000;
+  background: #fff;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+}
+
+.act-tarjeta:hover,
+.act-tarjeta:focus-visible {
+  background: #ffffe8;
+}
+
+.act-tarjeta:active {
+  border-color: #808080 #fff #fff #808080;
+}
+
+.act-tarjeta-titulo {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000080;
+}
+
+.act-tarjeta-datos {
+  color: #333;
+}
+
+.act-capitalizar::first-letter {
+  text-transform: uppercase;
+}
+
+/* Etiquetas */
+.act-ficha-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.act-tipo,
+.act-estado {
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid #000;
+}
+
+.act-tipo {
+  background: #c0c0c0;
+}
+
+.act-estado-abierta {
+  background: #4caf50;
+  color: #fff;
+}
+
+.act-estado-cerrada {
+  background: #ff9800;
+  color: #000;
+}
+
+.act-estado-finalizada {
+  background: #808080;
+  color: #fff;
+}
+
+/* Detalle */
+.act-volver {
+  align-self: flex-start;
+}
+
+.act-ficha {
+  padding: 12px;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+.act-titulo {
+  margin: 8px 0;
+  font-size: 18px;
+  color: #000080;
+}
+
+.act-datos {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.act-descripcion {
+  margin: 0;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.act-extra {
+  margin-top: 12px;
+  padding: 8px;
+  background: #ffffe1;
+  border: 1px solid #000;
+}
+
+.act-extra-titulo {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.act-aviso {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  background: #ffffe1;
+  border: 1px solid #000;
+}
+
+/* Formularios */
+.act-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+.act-formulario p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.act-formulario-titulo {
+  font-weight: bold;
+  color: #000080;
+}
+
+.act-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.act-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.act-etiqueta {
+  font-weight: bold;
+}
+
+.act-input {
+  width: 100%;
+  padding: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: inset 1px 1px 0 #000;
+}
+
+.act-casilla {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.act-casilla input {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.act-error {
+  color: #c00000;
+  font-size: 11px;
+}
+
+.act-error-general {
+  color: #c00000;
+  font-weight: bold;
+}
+
+.act-botones {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.act-boton-principal {
+  font-weight: bold;
+}
+
+/* Resultados */
+.act-exito,
+.act-resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px;
+  text-align: center;
+  line-height: 1.5;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #fff #fff #808080;
+}
+
+.act-exito h3,
+.act-resultado h3 {
+  margin: 0;
+  color: #000080;
+}
+
+.act-exito p,
+.act-resultado p {
+  margin: 0;
+  max-width: 420px;
+}
+
+.act-exito-icono {
+  font-size: 40px;
+}
+
+/* Registro de asistencia */
+.act-asistencia-cuerpo {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+}
+
+@media (max-width: 520px) {
+  .act-fila {
+    grid-template-columns: 1fr;
+  }
+
+  .act-botones .win95-boton {
+    flex: 1;
+  }
+
+  .act-titulo {
+    font-size: 16px;
+  }
+}

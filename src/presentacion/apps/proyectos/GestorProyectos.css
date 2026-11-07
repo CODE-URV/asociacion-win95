@@ -179,3 +179,54 @@
   gap: 6px;
   margin-top: 4px;
 }
+
+/* Piezas compartidas por los gestores del Panel de control */
+.gp-casilla {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.gp-boton-mini {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 4px;
+  font-family: inherit;
+  font-size: 11px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #000 #000 #fff;
+  cursor: pointer;
+}
+
+.gp-estado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gp-tabla-inscritos td:first-child,
+.gp-tabla-inscritos th:first-child {
+  width: 28px;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  /* Inscritos en móvil: se ve el curso y se oculta el correo (sale en el CSV) */
+  .gp-tabla-inscritos th:nth-child(4),
+  .gp-tabla-inscritos td:nth-child(4) {
+    display: table-cell;
+  }
+
+  .gp-tabla-inscritos th:nth-child(3),
+  .gp-tabla-inscritos td:nth-child(3) {
+    display: none;
+  }
+
+  .gp-boton-mini {
+    min-width: 32px;
+    height: 30px;
+  }
+}

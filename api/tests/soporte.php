@@ -43,6 +43,21 @@ function lanza(string $clase, callable $codigo): \Throwable
     throw new FalloDeAsercion("Se esperaba {$clase} y no se lanzó nada");
 }
 
+/** Controlador de actividades con SQLite y un reloj controlable desde el test. */
+function montarActividades(\PDO $pdo, \Closure $autenticacion, \Closure $reloj): \CodeUrv\Presentacion\Controladores\ActividadesControlador
+{
+    $actividades = new \CodeUrv\Infraestructura\BaseDeDatos\RepositorioActividadesPdo($pdo);
+    $inscripciones = new \CodeUrv\Infraestructura\BaseDeDatos\RepositorioInscripcionesPdo($pdo);
+    $ajustes = new \CodeUrv\Infraestructura\BaseDeDatos\AjustesPdo($pdo);
+    return new \CodeUrv\Presentacion\Controladores\ActividadesControlador(
+        static fn () => new \CodeUrv\Aplicacion\CasosDeUso\ParticiparEnActividades(
+            $actividades, $inscripciones, $ajustes, $reloj, static fn () => strtoupper(bin2hex(random_bytes(6))),
+        ),
+        static fn () => new \CodeUrv\Aplicacion\CasosDeUso\GestionarActividades($actividades, $inscripciones, $ajustes, $reloj),
+        $autenticacion,
+    );
+}
+
 function pdoSqlite(): \PDO
 {
     $pdo = new \PDO('sqlite::memory:', null, null, [

@@ -79,3 +79,17 @@
   flex: 1;
   min-height: 0;
 }
+
+.pc-icono-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.pc-icono:focus .pc-icono-emoji {
+  background: none;
+}
