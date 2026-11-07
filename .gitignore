@@ -27,6 +27,8 @@ dist-ssr
 .env.local
 
 # Claves de la API PHP (solo en el servidor de Hostinger) y entorno de desarrollo
-config.php
-config.dev.php
+# (con / delante: solo en la raíz; sin ella, en Windows también ignoraba
+#  api/src/Infraestructura/Config.php por no distinguir mayúsculas)
+/config.php
+/config.dev.php
 *.sqlite
