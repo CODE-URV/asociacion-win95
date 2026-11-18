@@ -92,10 +92,15 @@ export default function WikiRace({ prueba, alVolver }) {
   const marco = useRef(null);
   const html = useMemo(() => (articulo ? limpiarHtml(articulo.html) : ''), [articulo]);
 
-  // Cada artículo nuevo se lee desde arriba
+  // El artículo se pinta a mano y React no vuelve a tocarlo. Con dangerouslySetInnerHTML,
+  // al pulsar un enlace la ventana se enfoca (mousedown), React volvía a poner el HTML y el
+  // enlace pulsado desaparecía antes del mouseup: el navegador no llegaba a lanzar el clic.
+  const terminada = estado?.partida.terminada ?? false;
   useEffect(() => {
-    marco.current?.scrollTo(0, 0);
-  }, [html]);
+    if (!marco.current) return;
+    marco.current.innerHTML = html;
+    marco.current.scrollTo(0, 0); // cada artículo nuevo se lee desde arriba
+  }, [html, terminada]);
 
   // Que el aviso de "ese enlace no cuenta" no se quede para siempre
   const { setAviso } = juego;
@@ -173,8 +178,6 @@ export default function WikiRace({ prueba, alVolver }) {
             ref={marco}
             className={`ol-articulo ${ocupado ? 'ol-articulo-ocupado' : ''}`}
             onClick={alHacerClic}
-            // El HTML viene de la API de Wikipedia y se limpia antes (sin scripts ni atributos on*)
-            dangerouslySetInnerHTML={{ __html: html }}
           />
         </>
       )}
