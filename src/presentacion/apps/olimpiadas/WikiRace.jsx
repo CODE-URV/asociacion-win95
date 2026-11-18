@@ -43,7 +43,7 @@ function EntrarConCodigo({ prueba, alEntrar, ocupado, error, codigoInicial }) {
       <h3>{prueba.nombre}</h3>
       <p>
         Tenéis que llegar de un artículo de Wikipedia a otro <strong>solo con los enlaces</strong> del propio
-        artículo. Gana quien llegue antes; si empatáis, quien haga menos clics. «Atrás» también cuenta como clic
+        artículo. Gana quien llegue antes; si empatáis, quien haga menos clics. No se puede volver atrás
         y no se puede usar Ctrl+F.
       </p>
       <p>El cronómetro empieza en cuanto entréis con el código de vuestro equipo.</p>
@@ -180,9 +180,6 @@ export default function WikiRace({ prueba, alVolver }) {
       ) : (
         <>
           <div className="ol-barra ol-barra-articulo">
-            <button className="win95-boton" onClick={juego.volver} disabled={!juego.anterior || ocupado} title={juego.anterior ? `Volver a «${juego.anterior}» (cuenta como clic)` : ''}>
-              ⬅ Atrás
-            </button>
             <span className="ol-actual">📍 {partida.actual}</span>
             {ocupado && <span className="ol-cargando">⏳</span>}
           </div>

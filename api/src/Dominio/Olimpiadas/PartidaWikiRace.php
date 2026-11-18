@@ -6,7 +6,7 @@ namespace CodeUrv\Dominio\Olimpiadas;
 
 /**
  * Partida de un equipo en una Wiki Race. La ruta empieza en el artículo de salida;
- * cada paso es un clic (volver atrás también cuenta). Los tiempos son milisegundos.
+ * cada paso es un clic en un enlace (no se puede volver atrás). Los tiempos son milisegundos.
  */
 final class PartidaWikiRace
 {
@@ -39,12 +39,6 @@ final class PartidaWikiRace
     public function actual(): string
     {
         return $this->ruta[count($this->ruta) - 1];
-    }
-
-    /** Artículo al que se vuelve con "Atrás" (null en el de salida). */
-    public function anterior(): ?string
-    {
-        return $this->ruta[count($this->ruta) - 2] ?? null;
     }
 
     public function clics(): int

@@ -118,7 +118,6 @@ export function useWikiRace(pruebaId) {
     }
   }, [ocupado, estado, aplicar, pruebaId, codigo]);
 
-  const ruta = estado?.partida.ruta ?? [];
   const salir = () => {
     guardarCodigo(pruebaId, '');
     setCodigo('');
@@ -138,8 +137,6 @@ export function useWikiRace(pruebaId) {
     setAviso,
     empezar,
     irA,
-    anterior: ruta.length > 1 ? ruta[ruta.length - 2] : null,
-    volver: () => ruta.length > 1 && irA(ruta[ruta.length - 2]),
     /** Vuelve a cargar el artículo actual (si Wikipedia ha fallado). */
     reintentar: () => {
       setError(null);

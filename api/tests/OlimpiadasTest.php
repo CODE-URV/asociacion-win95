@@ -34,7 +34,7 @@ final class WikipediaFalsa implements Wikipedia
 {
     public const ENLACES = [
         'Tarragona' => ['Cataluña', 'Imperio romano', 'Mar Mediterráneo'],
-        'Cataluña' => ['España', 'Barcelona'],
+        'Cataluña' => ['España', 'Barcelona', 'Imperio romano'],
         'Imperio romano' => ['Julio César', 'Roma'],
         'Julio César' => ['Pizza'], // no es verdad, pero sirve para el test
         'Pizza' => [],
@@ -240,16 +240,14 @@ return [
         afirmar(str_contains($trampa->datos['error'], 'Tarragona'));
 
         igual('Cataluña', $paso('AAAAAA', 'Cataluña')->datos['partida']['actual']);
-        $consultas = $wikipedia->consultas;
-        igual('Tarragona', $paso('AAAAAA', 'Tarragona')->datos['partida']['actual'], 'Atrás vuelve al anterior');
-        igual($consultas, $wikipedia->consultas, 'Volver atrás no pregunta a Wikipedia.');
+        igual(409, $paso('AAAAAA', 'Tarragona')->estado, 'No se puede volver atrás.');
         $paso('AAAAAA', 'Imperio romano');
         $reloj->ahora = $reloj->ahora->modify('+70 seconds');
         $final = $paso('AAAAAA', 'Julio César')->datos;
         igual(true, $final['partida']['terminada']);
-        igual(4, $final['partida']['clics']);
+        igual(3, $final['partida']['clics']);
         igual(75_000, $final['partida']['tiempoMs']);
-        igual(['Tarragona', 'Cataluña', 'Tarragona', 'Imperio romano', 'Julio César'], $final['partida']['ruta']);
+        igual(['Tarragona', 'Cataluña', 'Imperio romano', 'Julio César'], $final['partida']['ruta']);
         igual(75_000, $paso('AAAAAA', 'Roma')->datos['partida']['tiempoMs'], 'Terminada, ya no cambia.');
 
         // Azul empieza más tarde pero tarda menos: gana

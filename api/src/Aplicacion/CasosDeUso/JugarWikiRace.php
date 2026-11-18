@@ -54,7 +54,7 @@ final class JugarWikiRace
     }
 
     /**
-     * Un clic en un enlace (o "Atrás", que vuelve al artículo anterior y también cuenta).
+     * Un clic en un enlace del artículo actual. No se puede volver atrás.
      * @return array<string, mixed>
      */
     public function avanzar(int $pruebaId, string $codigo, string $articulo, string $ip, bool $esAdmin = false): array
@@ -75,9 +75,7 @@ final class JugarWikiRace
         if ($articulo === '' || mb_strlen($articulo) > Prueba::MAX_ARTICULO) {
             throw new Conflicto('Artículo no válido.');
         }
-        $destino = $articulo === $partida->anterior()
-            ? $articulo
-            : $this->wikipedia->seguirEnlace($partida->actual(), $articulo);
+        $destino = $this->wikipedia->seguirEnlace($partida->actual(), $articulo);
         if ($destino === null) {
             throw new Conflicto("Ese enlace no está en «{$partida->actual()}».");
         }
