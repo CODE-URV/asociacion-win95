@@ -43,7 +43,8 @@ function EntrarConCodigo({ prueba, alEntrar, ocupado, error, codigoInicial }) {
       <h3>{prueba.nombre}</h3>
       <p>
         Tenéis que llegar de un artículo de Wikipedia a otro <strong>solo con los enlaces</strong> del propio
-        artículo. Gana quien llegue antes; si empatáis, quien haga menos clics. «Atrás» también cuenta como clic.
+        artículo. Gana quien llegue antes; si empatáis, quien haga menos clics. «Atrás» también cuenta como clic
+        y no se puede usar Ctrl+F.
       </p>
       <p>El cronómetro empieza en cuanto entréis con el código de vuestro equipo.</p>
       <label className="ol-codigo-campo">
@@ -104,6 +105,23 @@ export default function WikiRace({ prueba, alVolver }) {
 
   // Que el aviso de "ese enlace no cuenta" no se quede para siempre
   const { setAviso } = juego;
+
+  // Sin buscar en la página mientras se juega (Ctrl+F, Cmd+F, F3, Ctrl+G)
+  const jugando = Boolean(estado) && !terminada;
+  useEffect(() => {
+    if (!jugando) return undefined;
+    const alPulsar = (e) => {
+      const tecla = e.key.toLowerCase();
+      const buscar = ((e.ctrlKey || e.metaKey) && (tecla === 'f' || tecla === 'g')) || e.key === 'F3';
+      if (buscar) {
+        e.preventDefault();
+        e.stopPropagation();
+        setAviso('Buscar en la página (Ctrl+F) no está permitido en la Wiki Race.');
+      }
+    };
+    window.addEventListener('keydown', alPulsar, true);
+    return () => window.removeEventListener('keydown', alPulsar, true);
+  }, [jugando, setAviso]);
   useEffect(() => {
     if (!aviso) return undefined;
     const t = setTimeout(() => setAviso(null), 4000);
