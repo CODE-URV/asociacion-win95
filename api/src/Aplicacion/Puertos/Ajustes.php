@@ -9,4 +9,7 @@ interface Ajustes
 {
     /** Devuelve el valor; si no existe, lo crea con $generar() y lo guarda. */
     public function obtenerOCrear(string $clave, callable $generar): string;
+
+    /** Crea o cambia el valor. */
+    public function guardar(string $clave, string $valor): void;
 }

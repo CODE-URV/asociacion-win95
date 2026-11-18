@@ -8,6 +8,8 @@ namespace CodeUrv\Presentacion\Http;
 final class Peticion
 {
     private const MAX_CUERPO = 64 * 1024;
+    /** Lo máximo que se lee del cuerpo (las imágenes de las CodeOlimpiadas van en base64). */
+    public const MAX_CUERPO_GRANDE = 6 * 1024 * 1024;
 
     /**
      * @param array<string, string> $consulta
@@ -48,7 +50,7 @@ final class Peticion
             '/' . trim($ruta, '/'),
             $consulta,
             $cabeceras,
-            (string) file_get_contents('php://input', false, null, 0, self::MAX_CUERPO + 1),
+            (string) file_get_contents('php://input', false, null, 0, self::MAX_CUERPO_GRANDE + 1),
             (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
         );
     }
@@ -64,9 +66,9 @@ final class Peticion
     }
 
     /** @return array<string, mixed> */
-    public function json(): array
+    public function json(int $maximo = self::MAX_CUERPO): array
     {
-        if (strlen($this->cuerpo) > self::MAX_CUERPO) {
+        if (strlen($this->cuerpo) > $maximo) {
             throw new PeticionInvalida('El cuerpo de la petición es demasiado grande.');
         }
         // Exigir JSON obliga a los navegadores a hacer "preflight" en peticiones de otros dominios

@@ -14,6 +14,13 @@ use CodeUrv\Aplicacion\CasosDeUso\GestionarCalendario;
 use CodeUrv\Infraestructura\Google\CalendarioGoogleEditable;
 use CodeUrv\Infraestructura\Google\TokenCuentaServicio;
 use CodeUrv\Presentacion\Controladores\CalendarioControlador;
+use CodeUrv\Aplicacion\CasosDeUso\ConsultarOlimpiadas;
+use CodeUrv\Aplicacion\CasosDeUso\GestionarOlimpiadas;
+use CodeUrv\Aplicacion\CasosDeUso\JugarWikiRace;
+use CodeUrv\Aplicacion\CasosDeUso\VisibilidadOlimpiadas;
+use CodeUrv\Infraestructura\BaseDeDatos\RepositorioOlimpiadasPdo;
+use CodeUrv\Infraestructura\Wikipedia\WikipediaApi;
+use CodeUrv\Presentacion\Controladores\OlimpiadasControlador;
 use CodeUrv\Infraestructura\Correo\EnviadorSmtp;
 use CodeUrv\Infraestructura\Pdf\CertificadoPdf;
 use CodeUrv\Aplicacion\CasosDeUso\GestionarProyectos;
@@ -109,6 +116,23 @@ final class Contenedor
                 fn () => new GestionarCalendario($this->calendarioEditable(), $this->reloj()),
                 $autenticacion,
             ),
+            new OlimpiadasControlador(
+                fn () => new ConsultarOlimpiadas(new RepositorioOlimpiadasPdo($this->pdo()), $this->visibilidadOlimpiadas()),
+                fn () => new JugarWikiRace(
+                    new RepositorioOlimpiadasPdo($this->pdo()),
+                    new WikipediaApi($this->http),
+                    new RegistroIntentosPdo($this->pdo()),
+                    $this->reloj(),
+                    $this->visibilidadOlimpiadas(),
+                ),
+                fn () => new GestionarOlimpiadas(
+                    new RepositorioOlimpiadasPdo($this->pdo()),
+                    new WikipediaApi($this->http),
+                    self::generarCodigoEquipo(...),
+                    $this->visibilidadOlimpiadas(),
+                ),
+                $autenticacion,
+            ),
         );
     }
 
@@ -151,6 +175,22 @@ final class Contenedor
         $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $codigo = '';
         for ($i = 0; $i < 12; $i++) {
+            $codigo .= $alfabeto[random_int(0, strlen($alfabeto) - 1)];
+        }
+        return $codigo;
+    }
+
+    private function visibilidadOlimpiadas(): VisibilidadOlimpiadas
+    {
+        return new VisibilidadOlimpiadas(new AjustesPdo($this->pdo()));
+    }
+
+    /** Código de equipo para la Wiki Race: 6 caracteres sin letras confusas. */
+    private static function generarCodigoEquipo(): string
+    {
+        $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        $codigo = '';
+        for ($i = 0; $i < 6; $i++) {
             $codigo .= $alfabeto[random_int(0, strlen($alfabeto) - 1)];
         }
         return $codigo;

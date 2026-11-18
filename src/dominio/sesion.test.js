@@ -15,6 +15,10 @@ describe('inicio de sesión', () => {
 
   it('las apps de administración solo las ve el admin', () => {
     const panel = { id: 'panel', soloAdmin: true };
+    const olimpiadas = { id: 'olimpiadas', requiereActivacion: true };
+    expect(puedeUsarApp({ esAdmin: false }, olimpiadas)).toBe(false);
+    expect(puedeUsarApp({ esAdmin: false }, olimpiadas, ['olimpiadas'])).toBe(true);
+    expect(puedeUsarApp({ esAdmin: true }, olimpiadas)).toBe(true);
     const publica = { id: 'eventos' };
     expect(puedeUsarApp(SESION_INVITADO, panel)).toBe(false);
     expect(puedeUsarApp(SESION_INVITADO, publica)).toBe(true);

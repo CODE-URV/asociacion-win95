@@ -5,6 +5,7 @@ import Taskbar from './Taskbar';
 import LoginDialog from './LoginDialog';
 import { useSesion } from '../../aplicacion/sesionContexto';
 import useGestorVentanas from '../../aplicacion/useGestorVentanas';
+import useAppsActivadas from '../../aplicacion/useAppsActivadas';
 import { puedeUsarApp } from '../../dominio/sesion';
 import { leerUrlAsistencia } from '../../dominio/actividad';
 import { APPS, appPorId, appsSoloAdmin } from '../apps/registro';
@@ -17,6 +18,7 @@ function Shell() {
   // se abre directamente la ventana para registrar la asistencia.
   const [qr] = useState(() => leerUrlAsistencia(window.location.search));
   const { ventanas, ...acciones } = useGestorVentanas(qr ? { app: appPorId('asistencia'), parametros: qr } : null);
+  const activadas = useAppsActivadas(sesion);
 
   useEffect(() => {
     // Quitar los parámetros para que al recargar no se repita
@@ -29,10 +31,11 @@ function Shell() {
     return <LoginDialog alEntrarComoInvitado={entrarComoInvitado} alIniciarSesion={iniciarSesion} />;
   }
 
-  const apps = APPS.filter((app) => puedeUsarApp(sesion, app));
+  const apps = APPS.filter((app) => puedeUsarApp(sesion, app, activadas));
 
   const alCerrarSesion = async () => {
-    acciones.cerrarApps(appsSoloAdmin);
+    // Al salir se cierran las ventanas que el invitado no puede ver
+    acciones.cerrarApps([...appsSoloAdmin, ...APPS.filter((a) => !puedeUsarApp(null, a, activadas)).map((a) => a.id)]);
     await cerrarSesion();
   };
 

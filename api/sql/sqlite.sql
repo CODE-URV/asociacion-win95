@@ -70,3 +70,43 @@ CREATE TABLE IF NOT EXISTS ajustes (
   clave TEXT NOT NULL PRIMARY KEY,
   valor TEXT NOT NULL
 );
+-- ===== CodeOlimpiadas =====
+
+CREATE TABLE IF NOT EXISTS olimpiadas_equipos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL UNIQUE,
+  miembros TEXT NOT NULL,
+  codigo TEXT NOT NULL UNIQUE,
+  creado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS olimpiadas_pruebas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  tipo TEXT NOT NULL,
+  descripcion TEXT NOT NULL,
+  estado TEXT NOT NULL DEFAULT 'preparacion',
+  origen TEXT NOT NULL DEFAULT '',
+  destino TEXT NOT NULL DEFAULT '',
+  creado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS olimpiadas_puntuaciones (
+  prueba_id INTEGER NOT NULL REFERENCES olimpiadas_pruebas (id) ON DELETE CASCADE,
+  equipo_id INTEGER NOT NULL REFERENCES olimpiadas_equipos (id) ON DELETE CASCADE,
+  originalidad INTEGER NULL,
+  adecuacion INTEGER NULL,
+  calidad INTEGER NULL,
+  imagen BLOB NULL,
+  imagen_tipo TEXT NULL,
+  PRIMARY KEY (prueba_id, equipo_id)
+);
+
+CREATE TABLE IF NOT EXISTS olimpiadas_partidas (
+  prueba_id INTEGER NOT NULL REFERENCES olimpiadas_pruebas (id) ON DELETE CASCADE,
+  equipo_id INTEGER NOT NULL REFERENCES olimpiadas_equipos (id) ON DELETE CASCADE,
+  inicio_ms INTEGER NOT NULL,
+  fin_ms INTEGER NULL,
+  ruta TEXT NOT NULL,
+  PRIMARY KEY (prueba_id, equipo_id)
+);

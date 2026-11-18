@@ -9,6 +9,7 @@ use CodeUrv\Aplicacion\Conflicto;
 use CodeUrv\Aplicacion\CredencialesIncorrectas;
 use CodeUrv\Presentacion\Controladores\ActividadesControlador;
 use CodeUrv\Presentacion\Controladores\CalendarioControlador;
+use CodeUrv\Presentacion\Controladores\OlimpiadasControlador;
 use CodeUrv\Aplicacion\DemasiadosIntentos;
 use CodeUrv\Aplicacion\NoAutorizado;
 use CodeUrv\Aplicacion\ServicioNoDisponible;
@@ -35,6 +36,7 @@ final class Api
         ActividadesControlador $actividades,
         private readonly \Closure $registrarError,
         ?CalendarioControlador $calendario = null,
+        ?OlimpiadasControlador $olimpiadas = null,
     ) {
         $this->router = (new Router())
             ->agregar('GET', '/proyectos', $proyectos->listar(...))
@@ -71,6 +73,31 @@ final class Api
                 ->agregar('POST', '/admin/eventos', $calendario->crear(...))
                 ->agregar('PUT', '/admin/eventos/{evento:texto}', $calendario->actualizar(...))
                 ->agregar('DELETE', '/admin/eventos/{evento:texto}', $calendario->eliminar(...));
+        }
+
+        if ($olimpiadas !== null) {
+            $equipo = '/pruebas/{id}/equipos/{equipo}';
+            $this->router
+                // CodeOlimpiadas: público
+                ->agregar('GET', '/olimpiadas', $olimpiadas->resumen(...))
+                ->agregar('GET', '/olimpiadas/visibilidad', $olimpiadas->visibilidad(...))
+                ->agregar('GET', "/olimpiadas{$equipo}/imagen", $olimpiadas->imagen(...))
+                ->agregar('POST', '/olimpiadas/pruebas/{id}/partida', $olimpiadas->empezarWikiRace(...))
+                ->agregar('POST', '/olimpiadas/pruebas/{id}/partida/pasos', $olimpiadas->avanzarWikiRace(...))
+                // CodeOlimpiadas: administración
+                ->agregar('GET', '/admin/olimpiadas', $olimpiadas->resumenAdmin(...))
+                ->agregar('PUT', '/admin/olimpiadas/visibilidad', $olimpiadas->cambiarVisibilidad(...))
+                ->agregar('POST', '/admin/olimpiadas/equipos', $olimpiadas->crearEquipo(...))
+                ->agregar('PUT', '/admin/olimpiadas/equipos/{id}', $olimpiadas->actualizarEquipo(...))
+                ->agregar('DELETE', '/admin/olimpiadas/equipos/{id}', $olimpiadas->eliminarEquipo(...))
+                ->agregar('POST', '/admin/olimpiadas/pruebas', $olimpiadas->crearPrueba(...))
+                ->agregar('PUT', '/admin/olimpiadas/pruebas/{id}', $olimpiadas->actualizarPrueba(...))
+                ->agregar('DELETE', '/admin/olimpiadas/pruebas/{id}', $olimpiadas->eliminarPrueba(...))
+                ->agregar('PUT', "/admin/olimpiadas{$equipo}/notas", $olimpiadas->puntuar(...))
+                ->agregar('GET', "/admin/olimpiadas{$equipo}/imagen", $olimpiadas->imagenAdmin(...))
+                ->agregar('PUT', "/admin/olimpiadas{$equipo}/imagen", $olimpiadas->subirImagen(...))
+                ->agregar('DELETE', "/admin/olimpiadas{$equipo}/imagen", $olimpiadas->eliminarImagen(...))
+                ->agregar('DELETE', "/admin/olimpiadas{$equipo}/partida", $olimpiadas->reiniciarPartida(...));
         }
     }
 

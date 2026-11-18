@@ -11,6 +11,7 @@
 //   escritorio  mostrar icono en el escritorio
 //   menu        sección del menú Inicio: 'principal' | 'juegos' | 'sistema' | null
 //   soloAdmin   solo visible con sesión de administrador
+//   requiereActivacion  el público solo la ve si un admin la activa (los admins siempre)
 
 import aboutUsIcon from '../assets/desktop_icons/about_us.png';
 import eventsIcon from '../assets/desktop_icons/events.png';
@@ -29,11 +30,13 @@ import PanelControl from './panel-control/PanelControl';
 import AcercaDe from './acerca/AcercaDe';
 import Actividades from './actividades/Actividades';
 import Asistencia from './actividades/Asistencia';
+import CodeOlimpiadas from './olimpiadas/CodeOlimpiadas';
 
 export const APPS = [
   { id: 'about', titulo: 'Quién somos', icono: '💻', imagen: aboutUsIcon, componente: SobreNosotros, tamano: { ancho: 700, alto: 550 }, escritorio: true, menu: 'principal' },
   { id: 'events', titulo: 'Eventos', icono: '📅', imagen: eventsIcon, componente: Eventos, escritorio: true, menu: 'principal' },
   { id: 'actividades', titulo: 'Charlas y talleres', icono: '🎤', componente: Actividades, tamano: { ancho: 720, alto: 580 }, escritorio: true, menu: 'principal' },
+  { id: 'olimpiadas', titulo: 'CodeOlimpiadas', icono: '🏅', componente: CodeOlimpiadas, tamano: { ancho: 780, alto: 600 }, escritorio: true, menu: 'principal', requiereActivacion: true },
   { id: 'projects', titulo: 'Proyectos', icono: '🚀', imagen: projectsIcon, componente: Proyectos, escritorio: true, menu: 'principal' },
   { id: 'inscriptions', titulo: 'Hazte socio', icono: '📝', imagen: sociosIcon, componente: Inscripciones, escritorio: true, menu: 'principal' },
   { id: 'contact', titulo: 'Contacto', icono: '📧', imagen: contactIcon, componente: Contacto, escritorio: true, menu: 'principal' },

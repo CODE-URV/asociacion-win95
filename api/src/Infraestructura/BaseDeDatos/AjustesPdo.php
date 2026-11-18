@@ -33,6 +33,16 @@ final class AjustesPdo implements Ajustes
         return $this->cache[$clave] = (string) $valor;
     }
 
+    public function guardar(string $clave, string $valor): void
+    {
+        if ($this->leer($clave) === null) {
+            $this->pdo->prepare('INSERT INTO ajustes (clave, valor) VALUES (?, ?)')->execute([$clave, $valor]);
+        } else {
+            $this->pdo->prepare('UPDATE ajustes SET valor = ? WHERE clave = ?')->execute([$valor, $clave]);
+        }
+        $this->cache[$clave] = $valor;
+    }
+
     private function leer(string $clave): ?string
     {
         $consulta = $this->pdo->prepare('SELECT valor FROM ajustes WHERE clave = ?');

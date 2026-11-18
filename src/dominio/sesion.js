@@ -24,7 +24,12 @@ export function interpretarInicioSesion(usuario, contrasena) {
   return { tipo: 'credenciales', usuario: nombre, contrasena };
 }
 
-/** Una aplicación solo se muestra si es pública o si la sesión es de administrador. */
-export function puedeUsarApp(sesion, app) {
-  return !app.soloAdmin || Boolean(sesion?.esAdmin);
+/**
+ * Una aplicación se muestra si es pública, o si la sesión es de administrador.
+ * Las que requieren activación (CodeOlimpiadas) las ve el público solo si un admin las ha activado.
+ */
+export function puedeUsarApp(sesion, app, activadas = []) {
+  if (sesion?.esAdmin) return true;
+  if (app.soloAdmin) return false;
+  return !app.requiereActivacion || activadas.includes(app.id);
 }

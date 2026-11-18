@@ -4,6 +4,7 @@ import projectsIcon from '../../assets/desktop_icons/projects.png';
 import GestorProyectos from '../proyectos/GestorProyectos';
 import GestorActividades from '../actividades/GestorActividades';
 import GestorCalendario from '../calendario/GestorCalendario';
+import GestorOlimpiadas from '../olimpiadas/GestorOlimpiadas';
 import eventsIcon from '../../assets/desktop_icons/events.png';
 import useModoTactil from '../../escritorio/useModoTactil';
 
@@ -11,6 +12,7 @@ import useModoTactil from '../../escritorio/useModoTactil';
 const APPLETS = [
   { id: 'actividades', nombre: 'Actividades', icono: '🎤', componente: GestorActividades },
   { id: 'calendario', nombre: 'Calendario', imagen: eventsIcon, componente: GestorCalendario },
+  { id: 'olimpiadas', nombre: 'CodeOlimpiadas', icono: '🏅', componente: GestorOlimpiadas },
   { id: 'proyectos', nombre: 'Proyectos', imagen: projectsIcon, componente: GestorProyectos },
 ];
 
